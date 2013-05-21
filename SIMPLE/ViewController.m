@@ -13,7 +13,9 @@
 @end
 
 @implementation ViewController
+@synthesize musicPlayer;
 
+#pragma mark - Intial Load
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -30,11 +32,33 @@
     [self registerMediaPlayerNotifications];
 }
 
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - Catching event notifications
+- (void) registerMediaPlayerNotifications
+{
+    NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
+    
+	[notificationCenter addObserver: self
+						   selector: @selector (handle_NowPlayingItemChanged:)
+							   name: MPMusicPlayerControllerNowPlayingItemDidChangeNotification
+							 object: musicPlayer];
+	
+	[notificationCenter addObserver: self
+						   selector: @selector (handle_PlaybackStateChanged:)
+							   name: MPMusicPlayerControllerPlaybackStateDidChangeNotification
+							 object: musicPlayer];
+    
+    [notificationCenter addObserver: self
+						   selector: @selector (handle_VolumeChanged:)
+							   name: MPMusicPlayerControllerVolumeDidChangeNotification
+							 object: musicPlayer];
+    
+	[musicPlayer beginGeneratingPlaybackNotifications];
 }
 
 @end
