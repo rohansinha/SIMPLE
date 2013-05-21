@@ -25,11 +25,14 @@
     
     [volumeSlider setValue:[musicPlayer volume]];
     
-	if ([musicPlayer playbackState] == MPMusicPlaybackStatePlaying)
+	if ([musicPlayer playbackState] == MPMusicPlaybackStatePlaying){
         [playPauseButton setTitle:@"||" forState:UIControlStateNormal];
+        //[playPosition setValue:[musicPlayer currentPlaybackTime]];
+    }
     else [playPauseButton setTitle:@"|>" forState:UIControlStateNormal];
     
     [self registerMediaPlayerNotifications];
+    //[playPosition setValue:[musicPlayer currentPlaybackTime]];
 }
 
 - (void)didReceiveMemoryWarning
@@ -64,6 +67,7 @@
 - (void) handle_NowPlayingItemChanged: (id) notification
 {
    	MPMediaItem *currentItem = [musicPlayer nowPlayingItem];
+    [playPosition setValue:[musicPlayer currentPlaybackTime]];
 	UIImage *artworkImage = [UIImage imageNamed:@"noArtworkImage.png"];
 	MPMediaItemArtwork *artwork = [currentItem valueForProperty: MPMediaItemPropertyArtwork];
 	

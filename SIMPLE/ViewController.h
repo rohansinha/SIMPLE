@@ -19,6 +19,8 @@
     IBOutlet UILabel *albumLabel;
     IBOutlet UISlider *volumeSlider;
     IBOutlet UIButton *playPauseButton;
+    //IBOutlet UISlider *playPosition;
+    //IBOutlet UIProgressView *playPosition;
 }
 
 @property (nonatomic, retain) MPMusicPlayerController *musicPlayer;
