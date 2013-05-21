@@ -18,7 +18,16 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+    musicPlayer = [MPMusicPlayerController iPodMusicPlayer];
     
+    
+    [volumeSlider setValue:[musicPlayer volume]];
+    
+	if ([musicPlayer playbackState] == MPMusicPlaybackStatePlaying)
+        [playPauseButton setTitle:@"||" forState:UIControlStateNormal];
+    else [playPauseButton setTitle:@"|>" forState:UIControlStateNormal];
+    
+    [self registerMediaPlayerNotifications];
 }
 
 
