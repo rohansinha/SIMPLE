@@ -10,7 +10,24 @@
 #import <MediaPlayer/MediaPlayer.h>
 
 @interface ViewController : UIViewController
+{
+    MPMusicPlayerController *musicPlayer;
+    
+    IBOutlet UIImageView *artworkView;
+    IBOutlet UILabel *titleLabel;
+    IBOutlet UILabel *artistLabel;
+    IBOutlet UILabel *albumLabel;
+    IBOutlet UISlider *volumeSlider;
+    IBOutlet UIButton *playPauseButton;
+}
 
+@property (nonatomic, retain) MPMusicPlayerController *musicPlayer;
 
+- (IBAction)showMediaPicker:(id)sender;
+- (IBAction)volumeSliderChanged:(id)sender;
+- (IBAction)prevSong:(id)sender;
+- (IBAction)playPause:(id)sender;
+- (IBAction)nextSong:(id)sender;
+- (void) registerMediaPlayerNotifications;
 
 @end
