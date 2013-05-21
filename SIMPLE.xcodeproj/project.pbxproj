@@ -19,6 +19,8 @@
 		1CFC763A174B92AB00ECF5A5 /* MainStoryboard_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1CFC7638174B92AB00ECF5A5 /* MainStoryboard_iPhone.storyboard */; };
 		1CFC763D174B92AB00ECF5A5 /* MainStoryboard_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1CFC763B174B92AB00ECF5A5 /* MainStoryboard_iPad.storyboard */; };
 		1CFC7640174B92AB00ECF5A5 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CFC763F174B92AB00ECF5A5 /* ViewController.m */; };
+		1CFC7685174B940E00ECF5A5 /* noArtworkImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CFC7684174B940E00ECF5A5 /* noArtworkImage.png */; };
+		1CFC7687174B96F700ECF5A5 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CFC7686174B96F700ECF5A5 /* MediaPlayer.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,6 +41,8 @@
 		1CFC763C174B92AB00ECF5A5 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard_iPad.storyboard; sourceTree = "<group>"; };
 		1CFC763E174B92AB00ECF5A5 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		1CFC763F174B92AB00ECF5A5 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		1CFC7684174B940E00ECF5A5 /* noArtworkImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = noArtworkImage.png; sourceTree = "<group>"; };
+		1CFC7686174B96F700ECF5A5 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -46,6 +50,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1CFC7687174B96F700ECF5A5 /* MediaPlayer.framework in Frameworks */,
 				1CFC7621174B92AB00ECF5A5 /* UIKit.framework in Frameworks */,
 				1CFC7623174B92AB00ECF5A5 /* Foundation.framework in Frameworks */,
 				1CFC7625174B92AB00ECF5A5 /* CoreGraphics.framework in Frameworks */,
@@ -58,6 +63,7 @@
 		1CFC7614174B92AB00ECF5A5 = {
 			isa = PBXGroup;
 			children = (
+				1CFC7686174B96F700ECF5A5 /* MediaPlayer.framework */,
 				1CFC7626174B92AB00ECF5A5 /* SIMPLE */,
 				1CFC761F174B92AB00ECF5A5 /* Frameworks */,
 				1CFC761E174B92AB00ECF5A5 /* Products */,
@@ -99,6 +105,7 @@
 		1CFC7627174B92AB00ECF5A5 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				1CFC7684174B940E00ECF5A5 /* noArtworkImage.png */,
 				1CFC7628174B92AB00ECF5A5 /* SIMPLE-Info.plist */,
 				1CFC7629174B92AB00ECF5A5 /* InfoPlist.strings */,
 				1CFC762C174B92AB00ECF5A5 /* main.m */,
@@ -167,6 +174,7 @@
 				1CFC7637174B92AB00ECF5A5 /* Default-568h@2x.png in Resources */,
 				1CFC763A174B92AB00ECF5A5 /* MainStoryboard_iPhone.storyboard in Resources */,
 				1CFC763D174B92AB00ECF5A5 /* MainStoryboard_iPad.storyboard in Resources */,
+				1CFC7685174B940E00ECF5A5 /* noArtworkImage.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -274,10 +282,14 @@
 		1CFC7644174B92AC00ECF5A5 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SIMPLE/SIMPLE-Prefix.pch";
 				INFOPLIST_FILE = "SIMPLE/SIMPLE-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -285,10 +297,14 @@
 		1CFC7645174B92AC00ECF5A5 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SIMPLE/SIMPLE-Prefix.pch";
 				INFOPLIST_FILE = "SIMPLE/SIMPLE-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -312,6 +328,7 @@
 				1CFC7645174B92AC00ECF5A5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
