@@ -61,4 +61,50 @@
 	[musicPlayer beginGeneratingPlaybackNotifications];
 }
 
+- (void) handle_NowPlayingItemChanged: (id) notification
+{
+   	MPMediaItem *currentItem = [musicPlayer nowPlayingItem];
+	UIImage *artworkImage = [UIImage imageNamed:@"noArtworkImage.png"];
+	MPMediaItemArtwork *artwork = [currentItem valueForProperty: MPMediaItemPropertyArtwork];
+	
+	if (artwork) artworkImage = [artwork imageWithSize: CGSizeMake (200, 200)];
+	
+    [artworkView setImage:artworkImage];
+    
+    NSString *titleString = [currentItem valueForProperty:MPMediaItemPropertyTitle];
+    if (titleString)
+        titleLabel.text = [NSString stringWithFormat:@"Title: %@",titleString];
+    else titleLabel.text = @"Title: Unknown title";
+    
+    NSString *artistString = [currentItem valueForProperty:MPMediaItemPropertyArtist];
+    if (artistString) artistLabel.text = [NSString stringWithFormat:@"Artist: %@", artistString];
+    else artistLabel.text = @"Artist: Unknown artist";
+    
+    NSString *albumString = [currentItem valueForProperty:MPMediaItemPropertyAlbumTitle];
+    if (albumString) albumLabel.text = [NSString stringWithFormat:@"Album: %@", albumString];
+    else albumLabel.text = @"Album: Unknown album";
+}
+
+
+- (void) handle_PlaybackStateChanged: (id) notification
+{
+    MPMusicPlaybackState playbackState = [musicPlayer playbackState];
+	
+	if (playbackState == MPMusicPlaybackStatePaused)
+        [playPauseButton setTitle:@"|>" forState:UIControlStateNormal];
+    else if (playbackState == MPMusicPlaybackStatePlaying)
+        [playPauseButton setTitle:@"||" forState:UIControlStateNormal];
+	else if (playbackState == MPMusicPlaybackStateStopped) {
+        [playPauseButton setTitle:@"|>" forState:UIControlStateNormal];
+		[musicPlayer stop];
+    }
+}
+
+- (void) handle_VolumeChanged: (id) notification
+{
+    [volumeSlider setValue:[musicPlayer volume]];
+}
+
+
+
 @end
