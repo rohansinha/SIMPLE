@@ -105,6 +105,31 @@
     [volumeSlider setValue:[musicPlayer volume]];
 }
 
+#pragma mark - Media Picker
 
+- (IBAction)showMediaPicker:(id)sender
+{
+    MPMediaPickerController *mediaPicker = [[MPMediaPickerController alloc] initWithMediaTypes:MPMediaTypeAny];
+    mediaPicker.delegate = self;
+    mediaPicker.allowsPickingMultipleItems = YES;
+    mediaPicker.prompt = @"Select song to play";
+    
+    [self presentViewController:mediaPicker animated:YES completion:NO];
+}
+
+- (void) mediaPicker: (MPMediaPickerController *) mediaPicker didPickMediaItems: (MPMediaItemCollection *) mediaItemCollection
+{
+    if (mediaItemCollection) {
+        [musicPlayer setQueueWithItemCollection: mediaItemCollection];
+        [musicPlayer play];
+    }
+	[self dismissViewControllerAnimated:YES completion:NO];
+}
+
+
+- (void) mediaPickerDidCancel: (MPMediaPickerController *) mediaPicker
+{
+	[self dismissViewControllerAnimated:YES completion:NO];
+}
 
 @end
