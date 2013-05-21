@@ -132,4 +132,30 @@
 	[self dismissViewControllerAnimated:YES completion:NO];
 }
 
+#pragma mark - Controls
+
+- (IBAction)volumeSliderChanged:(id)sender
+{
+    [musicPlayer setVolume:[volumeSlider value]];
+}
+
+- (IBAction)prevSong:(id)sender
+{
+    if([musicPlayer currentPlaybackTime] < 5.0)
+        [musicPlayer skipToPreviousItem];
+    else [musicPlayer skipToBeginning];
+}
+
+- (IBAction)playPause:(id)sender
+{
+    if ([musicPlayer playbackState] == MPMusicPlaybackStatePlaying)
+        [musicPlayer pause];
+    else [musicPlayer play];
+}
+
+- (IBAction)nextSong:(id)sender
+{
+    [musicPlayer skipToNextItem];
+}
+
 @end
