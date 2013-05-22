@@ -1,0 +1,39 @@
+ # defining sets 
+
+ set 1 : Top 50% of ur playlist 
+ set 2 : next 50% of heard  
+ set 3 : unheard or New songs  : Till t Reward has been 0 
+ set 4 : Rest : The ones skipped 
+
+ Set another tag to the song classifier : Heard or Unheard
+
+Reason : No decrementing of points.. Therefore problem in normalization
+
+	Define tags :
+		if tag = heard and reward is 0 -> set 4
+		else if tag = heard and reward> 0 ->set 1 or 2
+		else Newness i.e Set3 
+
+		Sexy Bitch = {index , tag: heard or unheard, set: 1/2/3/4 } # Song dictionary format
+
+		
+		-> Shuffle groups of 15 songs ! 
+
+		define rules of set 2 and set 1
+			->  Grow with ln function till it reaches the avg of the score in set 1 
+			-> 	when songs in set 2 exceeds the reward of ne song in set1 : swap 
+			-> Basicll all songs below he aveage of set 1 will increase by the 'ln' function till it crosses th average of set 1. the usage    of ln begins when the lowest value in set 1 crosses a reward of 50  
+
+		if song belongs to set 3 :
+			if set 2 and set 1 is NULL:
+				use normal rewards for the action taken
+
+		# approximation ->
+		if the least value in set 1 is 50 greater than the set 3 then trigger the " ln " function
+
+
+
+
+
+
+

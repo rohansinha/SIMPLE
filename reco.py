@@ -26,24 +26,25 @@ def populate_reward(RewardMatrix):
 			SongDict[i[0]] = [RewardMatrix[i[0]].sum(), heard] #if the song is heard 
 
 	print '\n\n'
-	#for x in HighestRewardList:
-	#		print x
+	
+	HighestRewardList= sorted(SongDict.iteritems(),key=lambda x: x[1],reverse = True)
+	for x in HighestRewardList:
+			print x
 
-def check_heard_reward(RewardMatrix,Curr_pos,selected):
+#def check_heard_reward(RewardMatrix,Curr_pos,selected):
 
-	if (SongDict[Curr_pos][1] == unheard and count > 20 and count< min(set1[-1])) or (SongDict[Curr_pos][1] == heard and count<min(set1[-1])):
+#	if (SongDict[Curr_pos][1] == unheard and count > 20 and count< min(set1[-1])) or (SongDict[Curr_pos][1] == heard and count<min(set1[-1])):
 		
-		RewardMatrix[Curr_pos][selected]+= jump(RewardMatrix)
+#		RewardMatrix[Curr_pos][selected]+= jump(RewardMatrix)
 
-	else:
-		RewardMatrix[Curr_pos][selected]+=3 # for now we consider 3. later add the signals like Half listned or completely
+#	else:
+#		RewardMatrix[Curr_pos][selected]+=3 # for now we consider 3. later add the signals like Half listned or completely
 
-	rearrange_sets()
+#	rearrange_sets()
 
 	
-def rearrange_sets():
+#def rearrange_sets():
 
-	HighestRewardList= sorted(SongDict.iteritems(),key=lambda x: x[1],reverse = True)
 	# find the 
 
 		
