@@ -62,6 +62,8 @@ def main():
 	v = [0.25 for i in range(4)]
 	v= mat(v)
 	alpha=1.0
+	normalised = {}
+
 	for i in range(20):
 		
 		#converting the sets to list type so that the object doesnt throw an "indexing error"
@@ -84,6 +86,7 @@ def main():
 	    	temp=R[curr]/R[curr].sum()
 
 	    	r = (0.85*temp)+(0.15/4) #adding the damping factor
+		normalised[curr]=r
 	    	r= mat(r)
 	    	v= mat(v)+(alpha*(mat(r) - (0.15*mat(v)))) # The Learning algo
 	    	alpha=1.0/(i+1)
@@ -94,6 +97,10 @@ def main():
 		create_sets(R) 
 	
 	print 'POLICY MATRIX :{0}'.format(v)
+	
+	for i,j in normalised.iteritems():
+		print i,':',j #printing the flow pattern
+
 
 
 if  __name__=='__main__':
