@@ -17,7 +17,7 @@ top50=[]
 next50=[]
 new=[]
 
-global used = 0;
+used = 0;
 
 def jump(RewardMatrix):
 	n=size(RewardMatrix)
@@ -25,8 +25,9 @@ def jump(RewardMatrix):
 	Reward = log(cumilative*(n/(n+1)))
 	return Reward 
 
-def create_sets(playlist,RewardMatrix):
+def create_sets(RewardMatrix):
 
+	global new,top50,next50
 	for i in enumerate(RewardMatrix): #adding the song index as well as the score! index is the song's identity 
 		new = list(new)
 		top50= list(top50)
@@ -34,28 +35,28 @@ def create_sets(playlist,RewardMatrix):
 
 		if RewardMatrix[i[0]].sum() == 0: #If the song is unheard / New
 			NewSongDict[i[0]]=0 #add the new song and the point=0
-			logging.INFO('New Song \n')
+			logging.info('New Song \n')
 		else:
 				
 			SongDict[i[0]]=RewardMatrix[i[0]].sum() #update the dict with new scores
-			logging.INFO('Already Heard\n'.format(i[0]))
+			logging.info('Already Heard\n'.format(i[0]))
 	
 	HighestRewardList= sorted(SongDict.iteritems(), key=lambda x:x[1],reverse= True) #Based on Reward sort the SongDict
 	new = sorted(NewSongDict.iteritems()) #basically returning a list of tupules with no repeatition or else have to use a loop to keep adding
-	logging.INFO("Creating Sets\n")
+	logging.info("Creating Sets\n")
 	
 	#Converting to set type
 	top50=set(HighestRewardList[:((len(HighestRewardList)/2))-1])
 	next50 = set(HighestRewardList[(len(HighestRewardList)/2):])
 	new= set(new)
-	logging.INFO('top50 next50 new--> sets are updated\n')
+	logging.info('top50 next50 new--> sets are updated\n')
 	
 	for songs in HighestRewardList: #displaying the top songs
 		print songs
 
 
 def main():
-
+	global top50,next50,new,used
 	curr=0
 	R = [[0.0 for j in range(4)]for i in range(4)]
 	R = array(R)
@@ -72,7 +73,7 @@ def main():
 		new=list(new)
 
 		selection= input('enter song index:')
-		logging.INFO('{0} added to playlist'.format(selection))
+		logging.info('{0} added to playlist'.format(str(selection)))
 		#Assuming we have used the playlist quite a no of times and songs belonging to the lower sets or even the top50 set with their reward value less the half of the max reward we start using the log function
 		if (used > 10) and  ((SongDict[curr] in new) or (SongDict[curr] in next50) or (SongDict[curr] in top50)) and (SongDict[curr]<top[0][1]/2 ):
 			R=array(R)
