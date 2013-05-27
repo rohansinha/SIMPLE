@@ -1,14 +1,16 @@
 #!/usr/bin/python
 
+
 from numpy import *
 import operator
 import random
 import logging
+ 
 
 logging.root.setLevel(logging.INFO)
 
 SongDict = {}
-NewSongDict = {} #Creating a dict for new songs as updation becomes simpler 
+NewSongDict = {}#Creating a dict for new songs as updation becomes simpler 
 heard = 1
 unheard = 0 #Newness 
 
@@ -21,6 +23,7 @@ used = 0;
 
 def jump(RewardMatrix):
 	n=size(RewardMatrix)
+	n=n+0.0
 	cumilative = RewardMatrix.sum()
 	Reward = log(cumilative*(n/(n+1)))
 	return Reward 
@@ -58,14 +61,14 @@ def create_sets(RewardMatrix):
 def main():
 	global top50,next50,new,used
 	curr=0
-	R = [[0.0 for j in range(4)]for i in range(4)]
+	R = [[0.0 for j in range(10)]for i in range(10)]
 	R = array(R)
-	v = [0.25 for i in range(4)]
+	v = [0.1 for i in range(10)]
 	v= mat(v)
 	alpha=1.0
 	normalised = {}
 
-	for i in range(20):
+	for i in range(16):
 		
 		#converting the sets to list type so that the object doesnt throw an "indexing error"
 		top50=list(top50)
@@ -74,18 +77,18 @@ def main():
 
 		selection= input('enter song index:')
 		logging.info('{0} added to playlist'.format(str(selection)))
-		#Assuming we have used the playlist quite a no of times and songs belonging to the lower sets or even the top50 set with their reward value less the half of the max reward we start using the log function
-		if (used > 10) and  ((SongDict[curr] in new) or (SongDict[curr] in next50) or (SongDict[curr] in top50)) and (SongDict[curr]<top[0][1]/2 ):
-			R=array(R)
+		#Assumin we have used the playlist quite a no of times and songs belonging to the lower sets or even the top50 set with their reward value less the half of the max reward we start using the log function
+		if (used > 10) and (SongDict.get(curr)<top50[0][1]/2 ):
+			R=array(R)			
 			R[curr][selection]+=jump(R) #Jump greater than usual
-		
+			logging.info('jumping by some reward {0}\n'.format(jump(R)))	
 		else:
-			reward = random.randint(0,3) #Random assignment of rewards
+			reward = random.randint(1,3) #Random assignment of rewards
 			R= array(R)
 			R[curr][selection]+=reward
 	    	R=mat(R.copy())
 	    	temp=R[curr]/R[curr].sum()
-
+		logging.info('Value of R[curr] and R[curr].sum()={0}\t{1}'.format(R[curr],R[curr].sum()))
 	    	r = (0.85*temp)+(0.15/4) #adding the damping factor
 		normalised[curr]=r
 	    	r= mat(r)
