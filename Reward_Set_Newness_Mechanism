@@ -30,11 +30,15 @@ Reason : No decrementing of points.. Therefore problem in normalization
 
 		# approximation ->
 		if the least value in set 1 is 50 greater than the set 3 then trigger the " ln " function
-		
 
+****************************************************************************************************************************
+What to do once we obtain the flow pattern matrix and song policy matrix:-
+	1. Let the user choose ne song 
+	2. Update the reward matrix[i.e update that row and it updates the set-transition]
+	3. From that row play the most probable song 
+	4. Mark the song played at 1 "Played" so that it doesnt play again
+	
+Our song policy is used to create our sets and it decides for what songs below the "Threshold"(avg) will jump by the ln function!
 
-
-
-
-
-
+Doubt :When do we shuffle the top 15% songs and all those?
+possible ans:  do we shuffle the top rewarded songs in that song row ? as in we consider the top 20% songs in that row and choose ne one of them..Random?
