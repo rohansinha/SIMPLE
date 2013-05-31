@@ -34,7 +34,7 @@ def create_sets(RewardMatrix):
 	for i in enumerate(RewardMatrix): #adding the song index as well as the score! index is the song's identity 
 		new = list(new)
 		top50= list(top50)
-		next50= list(next50)
+
 
 		if RewardMatrix[i[0]].sum() == 0: #If the song is unheard / New
 			NewSongDict[i[0]]=0 #add the new song and the point=0
@@ -42,14 +42,14 @@ def create_sets(RewardMatrix):
 		else:
 				
 			SongDict[i[0]]=RewardMatrix[i[0]].sum() #update the dict with new scores
-			logging.info('Already Heard\n'.format(i[0]))
+			logging.info('Already Heard {0} and SongDict[curr]={1}\n'.format(i[0],SongDict[i[0]]))
 	
 	HighestRewardList= sorted(SongDict.iteritems(), key=lambda x:x[1],reverse= True) #Based on Reward sort the SongDict
 	new = sorted(NewSongDict.iteritems()) #basically returning a list of tupules with no repeatition or else have to use a loop to keep adding
 	logging.info("Creating Sets\n")
 	
 	#Converting to set type
-	top50=set(HighestRewardList[:((len(HighestRewardList)/2))-1])
+	top50=set(HighestRewardList[:((len(HighestRewardList)/2))])
 	next50 = set(HighestRewardList[(len(HighestRewardList)/2):])
 	new= set(new)
 	logging.info('top50 next50 new--> sets are updated\n')
@@ -76,7 +76,7 @@ def main():
 		new=list(new)
 
 		selection= input('enter song index:')
-		logging.info('{0} added to playlist'.format(str(selection)))
+		logging.info('{0} added to playlist queue and  SongDict[{1}]:{2} and top50={3}'.format(str(selection),curr,SongDict.get(curr),top50))
 		#Assumin we have used the playlist quite a no of times and songs belonging to the lower sets or even the top50 set with their reward value less the half of the max reward we start using the log function
 		if (used > 10) and (SongDict.get(curr)<top50[0][1]/2 ):
 			R=array(R)			
