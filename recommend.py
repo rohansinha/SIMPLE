@@ -2,6 +2,7 @@
 
 
 from numpy import *
+from dataset import *
 import operator
 import random
 import logging
@@ -9,17 +10,17 @@ import logging
 
 logging.root.setLevel(logging.INFO)
 
-SongDict = {}
-NewSongDict = {}#Creating a dict for new songs as updation becomes simpler 
-heard = 1
-unheard = 0 #Newness 
+#SongDict = {}
+#NewSongDict = {}#Creating a dict for new songs as updation becomes simpler 
+#heard = 1
+#unheard = 0 #Newness 
 
 #Our Sets
-top50=[] 
-next50=[]
-new=[]
+#top50=[] 
+#next50=[]
+#new=[]
 
-used = 0;
+#used = 0;
 
 def jump(RewardMatrix):
 	n=size(RewardMatrix)
@@ -58,12 +59,12 @@ def create_sets(RewardMatrix):
 		print songs
 
 
-def main():
+def xyz(curr,R,v):
 	global top50,next50,new,used
-	curr=0
-	R = [[0.0 for j in range(10)]for i in range(10)]
+	#curr=0
+	#R = [[0.0 for j in range(10)]for i in range(10)]
 	R = array(R)
-	v = [0.1 for i in range(10)]
+	#v = [0.1 for i in range(10)]
 	v= mat(v)
 	alpha=1.0
 	normalised = {}
@@ -106,7 +107,19 @@ def main():
 		print i,':',j #printing the flow pattern
 
 
-
+def main():
+	play=input('Press 1 to enter SIMPLE:')
+	R = [[0.0 for j in range(10)]for i in range(10)]
+	v = [0.1 for i in range(10)]
+	while play:
+		curr=input('Enter song index:')
+	
+		xyz(curr,R,v)
+		choice=raw_input('Enter SIMPLE again (y/n):')
+		if choice=='n':
+			break
+	print 'SIMPLE TERMINATED. IT WAS A PLEASURE UNDERSTANDING YOU :)'
+		
 if  __name__=='__main__':
 	main()
 
