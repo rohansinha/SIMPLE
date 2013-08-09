@@ -67,11 +67,11 @@
 - (void) handle_NowPlayingItemChanged: (id) notification
 {
    	MPMediaItem *currentItem = [musicPlayer nowPlayingItem];
-    [playPosition setValue:[musicPlayer currentPlaybackTime]];
+    //[playPosition setValue:[musicPlayer currentPlaybackTime]];
 	UIImage *artworkImage = [UIImage imageNamed:@"noArtworkImage.png"];
 	MPMediaItemArtwork *artwork = [currentItem valueForProperty: MPMediaItemPropertyArtwork];
 	
-	if (artwork) artworkImage = [artwork imageWithSize: CGSizeMake (200, 200)];
+	if (artwork) artworkImage = [artwork imageWithSize:CGSizeMake(200, 200)];
 	
     [artworkView setImage:artworkImage];
     
@@ -88,7 +88,6 @@
     if (albumString) albumLabel.text = [NSString stringWithFormat:@"Album: %@", albumString];
     else albumLabel.text = @"Album: Unknown album";
 }
-
 
 - (void) handle_PlaybackStateChanged: (id) notification
 {

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1C7244A217B2A71700A60BF1 /* Appicon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C7244A117B2A71700A60BF1 /* Appicon.png */; };
 		1CFC7621174B92AB00ECF5A5 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CFC7620174B92AB00ECF5A5 /* UIKit.framework */; };
 		1CFC7623174B92AB00ECF5A5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CFC7622174B92AB00ECF5A5 /* Foundation.framework */; };
 		1CFC7625174B92AB00ECF5A5 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CFC7624174B92AB00ECF5A5 /* CoreGraphics.framework */; };
@@ -24,6 +25,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1C7244A117B2A71700A60BF1 /* Appicon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Appicon.png; sourceTree = "<group>"; };
+		1C7244A317B2A7A400A60BF1 /* SIMPLE-iPhone.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "SIMPLE-iPhone.jpg"; sourceTree = "<group>"; };
 		1CFC761D174B92AB00ECF5A5 /* SIMPLE.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SIMPLE.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1CFC7620174B92AB00ECF5A5 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		1CFC7622174B92AB00ECF5A5 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -105,6 +108,8 @@
 		1CFC7627174B92AB00ECF5A5 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				1C7244A317B2A7A400A60BF1 /* SIMPLE-iPhone.jpg */,
+				1C7244A117B2A71700A60BF1 /* Appicon.png */,
 				1CFC7684174B940E00ECF5A5 /* noArtworkImage.png */,
 				1CFC7628174B92AB00ECF5A5 /* SIMPLE-Info.plist */,
 				1CFC7629174B92AB00ECF5A5 /* InfoPlist.strings */,
@@ -174,6 +179,7 @@
 				1CFC7637174B92AB00ECF5A5 /* Default-568h@2x.png in Resources */,
 				1CFC763A174B92AB00ECF5A5 /* MainStoryboard_iPhone.storyboard in Resources */,
 				1CFC763D174B92AB00ECF5A5 /* MainStoryboard_iPad.storyboard in Resources */,
+				1C7244A217B2A71700A60BF1 /* Appicon.png in Resources */,
 				1CFC7685174B940E00ECF5A5 /* noArtworkImage.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -282,13 +288,15 @@
 		1CFC7644174B92AC00ECF5A5 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer: Rohan Sinha (HMUX5K6W8X)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Rohan Sinha (HMUX5K6W8X)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SIMPLE/SIMPLE-Prefix.pch";
 				INFOPLIST_FILE = "SIMPLE/SIMPLE-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "15F036D6-E899-43CA-BA74-64EED1C23E7D";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
@@ -297,13 +305,15 @@
 		1CFC7645174B92AC00ECF5A5 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer: Rohan Sinha (HMUX5K6W8X)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Rohan Sinha (HMUX5K6W8X)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SIMPLE/SIMPLE-Prefix.pch";
 				INFOPLIST_FILE = "SIMPLE/SIMPLE-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "15F036D6-E899-43CA-BA74-64EED1C23E7D";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
