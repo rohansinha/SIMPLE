@@ -18,6 +18,7 @@
     IBOutlet UILabel *artistLabel;
     IBOutlet UILabel *albumLabel;
     IBOutlet UIButton *playPauseButton;
+    IBOutlet UIImageView *bg;
     //IBOutlet UISlider *playPosition;
     //IBOutlet UIProgressView *playPosition;
 }

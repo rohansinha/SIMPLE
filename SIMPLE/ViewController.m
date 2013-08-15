@@ -62,11 +62,20 @@
    	MPMediaItem *currentItem = [musicPlayer nowPlayingItem];
     //[playPosition setValue:[musicPlayer currentPlaybackTime]];
 	UIImage *artworkImage = [UIImage imageNamed:@"noArtworkImage.png"];
+    UIImage *background = [UIImage imageNamed:@"noBG.jpg"];
 	MPMediaItemArtwork *artwork = [currentItem valueForProperty: MPMediaItemPropertyArtwork];
-	
-	if (artwork) artworkImage = [artwork imageWithSize:CGSizeMake(200, 200)];
-	
+	if (artwork) artworkImage = [artwork imageWithSize:CGSizeMake(320, 320)];
+	NSString *genre = [currentItem valueForProperty: MPMediaItemPropertyGenre];
+    
+    if([genre isEqualToString:@"Rock"])
+        background = [UIImage imageNamed:@"SIMPLE-bg_purple.jpg"];
+    else if([genre isEqualToString:@"Alternative"])
+        background = [UIImage imageNamed:@"SIMPLE-bg_blue.jpg"];
+    else if([genre isEqualToString:@"Pop"]) background = [UIImage imageNamed:@"SIMPLE-bg_green.jpg"];
+    else background = [UIImage imageNamed:@"SIMPLE-bg_red.jpg"];
+    
     [artworkView setImage:artworkImage];
+    [bg setImage:background];
     
     NSString *titleString = [currentItem valueForProperty:MPMediaItemPropertyTitle];
     if (titleString)
