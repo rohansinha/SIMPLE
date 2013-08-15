@@ -20,10 +20,8 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+    [[UIApplication sharedApplication] setStatusBarHidden:YES];
     musicPlayer = [MPMusicPlayerController iPodMusicPlayer];
-    
-    
-    [volumeSlider setValue:[musicPlayer volume]];
     
 	if ([musicPlayer playbackState] == MPMusicPlaybackStatePlaying){
         [playPauseButton setTitle:@"||" forState:UIControlStateNormal];
@@ -54,11 +52,6 @@
 	[notificationCenter addObserver: self
 						   selector: @selector (handle_PlaybackStateChanged:)
 							   name: MPMusicPlayerControllerPlaybackStateDidChangeNotification
-							 object: musicPlayer];
-    
-    [notificationCenter addObserver: self
-						   selector: @selector (handle_VolumeChanged:)
-							   name: MPMusicPlayerControllerVolumeDidChangeNotification
 							 object: musicPlayer];
     
 	[musicPlayer beginGeneratingPlaybackNotifications];
@@ -103,11 +96,6 @@
     }
 }
 
-- (void) handle_VolumeChanged: (id) notification
-{
-    [volumeSlider setValue:[musicPlayer volume]];
-}
-
 #pragma mark - Media Picker
 
 - (IBAction)showMediaPicker:(id)sender
@@ -136,11 +124,6 @@
 }
 
 #pragma mark - Controls
-
-- (IBAction)volumeSliderChanged:(id)sender
-{
-    [musicPlayer setVolume:[volumeSlider value]];
-}
 
 - (IBAction)prevSong:(id)sender
 {

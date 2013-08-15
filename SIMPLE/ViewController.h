@@ -17,7 +17,6 @@
     IBOutlet UILabel *titleLabel;
     IBOutlet UILabel *artistLabel;
     IBOutlet UILabel *albumLabel;
-    IBOutlet UISlider *volumeSlider;
     IBOutlet UIButton *playPauseButton;
     //IBOutlet UISlider *playPosition;
     //IBOutlet UIProgressView *playPosition;
@@ -26,7 +25,6 @@
 @property (nonatomic, retain) MPMusicPlayerController *musicPlayer;
 
 - (IBAction)showMediaPicker:(id)sender;
-- (IBAction)volumeSliderChanged:(id)sender;
 - (IBAction)prevSong:(id)sender;
 - (IBAction)playPause:(id)sender;
 - (IBAction)nextSong:(id)sender;
