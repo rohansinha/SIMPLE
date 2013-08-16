@@ -176,7 +176,7 @@ class Brainy_Song(object):
 				change = (Brainy_Song.r +0.85 * Brainy_Song.v) - Brainy_Song.v
 				expected = Brainy_Song.alpha * change
 				Brainy_Song.v+=expected
-				
+				Brainy_Song.v = Brainy_Song.v/Brainy_Song.v.sum()	
 				self.curr_index = self.next_song_index
 				self.current = table[self.current][1].next_song # current song becomes the the current song's next song 
 				
