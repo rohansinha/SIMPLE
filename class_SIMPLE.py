@@ -152,12 +152,12 @@ class Brainy_Song(object):
 				Brainy_Song.r = []
 				
 				for i in range(len(table)):
-					Brainy_Song.r.append(Brainy_Song.R[:,i].sum()/Brainy_Song.R[:].sum())
+					Brainy_Song.r.append(Brainy_Song.R[:,i].sum()) #will normalize later 
 					logging.info('Normalised Brainy matrix :{0}'.format(Brainy_Song.r))
 	
 				Brainy_Song.r = array(Brainy_Song.r)
 
-				change = Brainy_Song.r - Brainy_Song.gamma * Brainy_Song.v
+				change = Brainy_Song.r + ( Brainy_Song.gamma * Brainy_Song.v)
 				expected = Brainy_Song.alpha*(change-Brainy_Song.v)
 				Brainy_Song.v += expected
 				
@@ -168,7 +168,7 @@ class Brainy_Song(object):
 				print 'Global learning policy {0}\n'.format(Brainy_Song.v)
 				print '2D matrix {0}\n'.format(Brainy_Song.R)
 			
-				self.hearing = input('How much are you listening to the current song:')	
+				self.hearing = table[self.current][1].hearing+0.0
 				table[self.current][1].play() #the current song name is the key of the table 
 				self.duration = table[self.current][1].duration
 				self.per = (self.hearing/self.duration)*100
