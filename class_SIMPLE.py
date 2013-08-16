@@ -155,7 +155,7 @@ class Brainy_Song(object):
 				
 				Brainy_Song.r = []
 				
-				temp = Brainy_Song.R 
+				temp = Brainy_Song.R.copy() #taking only the copy of the matrix  
 				
 				#temp stores the temporary normalized matrix
 				for i in range(len(table)):
