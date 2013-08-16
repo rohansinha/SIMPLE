@@ -147,7 +147,7 @@ class Brainy_Song(object):
 				if self.per>0 and self.per<=10:
 					Brainy_Song.R[self.next_song_index][self.curr_index]+=-1
 				
-				elif self.per>10 and self.per<=50:
+				elif self.per>10 and self.per<=80:
 					Brainy_Song.R[self.next_song_index][self.curr_index]+=3
 				
 				else:
@@ -175,7 +175,6 @@ class Brainy_Song(object):
 
 				change = (Brainy_Song.r +0.85 * Brainy_Song.v) - Brainy_Song.v
 				expected = Brainy_Song.alpha * change
-				#Brainy_Song.v += expected
 				Brainy_Song.v+=expected
 				
 				self.curr_index = self.next_song_index
