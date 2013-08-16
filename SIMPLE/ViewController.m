@@ -126,7 +126,7 @@
 	[self dismissViewControllerAnimated:YES completion:NO];
 }
 
-w
+
 - (void) mediaPickerDidCancel: (MPMediaPickerController *) mediaPicker
 {
 	[self dismissViewControllerAnimated:YES completion:NO];
