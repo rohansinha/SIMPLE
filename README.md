@@ -35,4 +35,11 @@ user listens to A only 10% and wishes to switch. it will check for which song[A,
  in "USER MODE"  we are at (A,10,B) ... it will select the highestQvalue of B and make some update 
  SAY NOW WE ARE in "SIMPLE MODE"
  we wish to hear only 10% of A...so the state is (A,10,action): it will select E coz (A,10,E) gives the max reward
+ ---------------------------------------------------------------------------------------------------------------------
+ I get what you are doing, but you will need to change the dependance of next state on the percentage of the song we have heard.
+ did you implement this to predict a song based on how the user is currently interacting with the player? the idea is good,
+ but implementation of this codde will require more than 4 times the training we would normally require...you get why na
+ i like the idea of suggesting the next song based on how you currently feel..it's a good measure of your taste by considering 
+ how we listen to songs. Don't make any changes to this, we will need to come up with a way to reduce the amount of training.
+ we can try some sort linking between sets
 
