@@ -140,14 +140,13 @@ class Brainy_Song(object):
 			self.per = (self.hearing/self.duration)*100
 			self.curr_index = table[self.current][1].INDEX  #Index of the current song 
 			while 1:
-				
-				
+					
 				self.next_song_index = table[self.current][1].next_state.INDEX #the the position of the song in the matrix
 				
 				if self.per>0 and self.per<=10:
 					Brainy_Song.R[self.next_song_index][self.curr_index]+=-1
 				
-				elif self.per>10 and self.per<=80:
+				elif self.per>10 and self.per<80:
 					Brainy_Song.R[self.next_song_index][self.curr_index]+=3
 				
 				else:
@@ -162,14 +161,11 @@ class Brainy_Song(object):
 					
 					if Brainy_Song.R[:,i].sum()==0:
 						continue
-					temp[:,i] = Brainy_Song.R[:,i]/Brainy_Song.R[:,i].sum()
+					temp[:,i] = Brainy_Song.R[:,i]/sqrt(Brainy_Song.R[:,i].sum())
 				
 				print 'Showing temp {0}'.format(temp)
 				for i in range(len(table)):
 					Brainy_Song.r.append(temp[:,i].sum()) #will normalize later 
-					#Brainy_Song.r.append(Brainy_Song.R[i,self.curr_index]/Brainy_Song.R[:,self.curr_index].sum())
-					#Brainy_Song.r.append(Brainy_Song.R[:,i]/Brainy_Song.R[:,self.curr_index].sum())
-					logging.info('Normalised Brainy matrix :{0}'.format(Brainy_Song.r))
 	
 				Brainy_Song.r = array(Brainy_Song.r)
 
