@@ -53,24 +53,24 @@ class Song(object):
 		if Song.used==0:
 			self.hearing = input('The player is being used the first time \n How much have you heard:')
 		logging.info('You are hearing {0} and have heard {1}'.format(self.name,self.hearing))
-		next_song = raw_input('Enter the next song:')
-		next_state = table[next_song][1]
+		self.next_song = raw_input('Enter the next song:')
+		self.next_state = table[self.next_song][1]
 		h = SongException(2,'Song already heard') #import a timing module and unflag it 
-		if next_state.flag: #check if the next song is heard or not 
+		if self.next_state.flag: #check if the next song is heard or not 
 			raise h
 		else:
-			logging.info('Listening to {0}'.format(next_state.name))
-		print ' Duration of {0}: {1}'.format(next_state.name,next_state.duration)
+			logging.info('Listening to {0}'.format(self.next_state.name))
+		print ' Duration of {0}: {1}'.format(self.next_state.name,self.next_state.duration)
 		mins = input('How much have you heard:')+0.0
-		per = (mins/next_state.duration)*100
+		per = (mins/self.next_state.duration)*100
 		print 'Per :{0}'.format(per)
-		if per<=10:
-			next_state.hearing = 10
-		elif per<=50:
-			next_state.hearing = 50
-		else:
-			next_state.hearing = 80
-		self.update(per,next_state.INDEX) #update the learner . Passing the %heard and the index of the song
+		if per>0 and per<50:
+			self.next_state.hearing = 10
+		elif per>=50 and per<80:
+			self.next_state.hearing = 50
+		elif per>=80 and per<100:
+			self.next_state.hearing = 80
+		self.update(per,self.next_state.INDEX) #update the learner . Passing the %heard and the index of the song
 		Song.used+=1
 		#self.flag = True #Song heard 
 	
@@ -117,45 +117,60 @@ class Brainy_Song(object):
 			if curr not in table:
 				raise h
 			else:
-				R = array([[0.0 for i in range(len(table))]for j in range(len(table))])
-				v = array([1.0/len(table) for i in range(len(table))])
-				r = []
 				logging.info('Global Reward Matrix and Policy Matrix generated\n')
-				self.current = curr
+				self.current = curr #current song name
+				Brainy_Song.R = [[0.0 for j in range(len(table))] for i in range(len(table))]
+				Brainy_Song.R = array(Brainy_Song.R)
+				Brainy_Song.v = array([1.0/len(table) for i in range(len(table))])
+				Brainy_Song.r = []
+				Brainy_Song.gamma = 0.85 # Wont change. Lets see if both classes actually need the same gamma or not
+				Brainy_Song.alpha = 1.0 #alpha will decay accordingly and will be reset everytime user resets the player
 		
 		def run(self):
 			
 			print 'Listening to {0}:'.format(self.current)
 			table[self.current][1].play()
-			self.hearing = table[self.current][1].hearing+0.0 #deciding how much the song will be rewarded 
+			self.hearing = table[self.current][1].hearing+0.0 #deciding how much the song will be rewarded
+			self.duration = table[self.current][1].duration 
 			self.per = (self.hearing/self.duration)*100
-			curr_index = table[self.current][1].INDEX 
+			self.curr_index = table[self.current][1].INDEX  #Index of the current song 
 			while 1:
 				#have to implement the log function
-				if Song.used>1:
-					table[curr_index][1].play()
-					self.hearing = table[self.current][1].hearing + 0.0
-					self.per = (self.hearing/self.duration)*100
-				next_song_index = table[current][1].next_state.INDEX #the the position of the song in the matrix
-				if self.per<=10:
-					Brainy_Song.R[next_song_index][curr_index]+=-1
-				elif self.per<=50:
-					Brainy_Song.R[next_song_index][curr_index]+=3
-				else:
-					Brainy_Song.R[next_song_index][curr_index]+=5
+				#print Brainy_Song.R
 				
-				Brain_Song.r = []
+				self.next_song_index = table[self.current][1].next_state.INDEX #the the position of the song in the matrix
+				
+				if self.per<=10:
+					Brainy_Song.R[self.next_song_index][self.curr_index]+=-1
+				
+				elif self.per<=50:
+					Brainy_Song.R[self.next_song_index][self.curr_index]+=3
+				
+				else:
+					Brainy_Song.R[self.next_song_index][self.curr_index]+=5
+				
+				Brainy_Song.r = []
+				
 				for i in range(len(table)):
 					Brainy_Song.r.append(Brainy_Song.R[:,i].sum()/Brainy_Song.R[:].sum())
-				
+					logging.info('Normalised Brainy matrix :{0}'.format(Brainy_Song.r))
+	
 				Brainy_Song.r = array(Brainy_Song.r)
 
-				change = Brainy_Song.r - gamma * Brainy_Song.v
-				expected = alpha*(change-Brainy_Song.v)
+				change = Brainy_Song.r - Brainy_Song.gamma * Brainy_Song.v
+				expected = Brainy_Song.alpha*(change-Brainy_Song.v)
 				Brainy_Song.v += expected
 				
-				curr_index = next_song_index
-
-
+				self.curr_index = self.next_song_index
+				self.current = table[self.current][1].next_song # current song becomes the the current song's next song 
+				
+				print 'The reward Matrix {0}\n'.format(Brainy_Song.r)
+				print 'Global learning policy {0}\n'.format(Brainy_Song.v)
+				print '2D matrix {0}\n'.format(Brainy_Song.R)
 			
-		
+				self.hearing = input('How much are you listening to the current song:')	
+				table[self.current][1].play() #the current song name is the key of the table 
+				self.duration = table[self.current][1].duration
+				self.per = (self.hearing/self.duration)*100
+				
+				#add the prediction module 
