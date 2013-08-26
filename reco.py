@@ -21,35 +21,40 @@ def populate_reward(RewardMatrix):
 
 	for i in enumerate(RewardMatrix):
 		if RewardMatrix[i[0]].sum() == 0: #if the song is new 
-			SongDict[i[0]] = [0,unheard]
+			pass
 		else:
 			SongDict[i[0]] = [RewardMatrix[i[0]].sum(), heard] #if the song is heard 
 
 	print '\n\n'
-	
 	HighestRewardList= sorted(SongDict.iteritems(),key=lambda x: x[1],reverse = True)
+
 	for x in HighestRewardList:
-			print x
+		print x
 
-#def check_heard_reward(RewardMatrix,Curr_pos,selected):
+def check_heard_reward(RewardMatrix,Curr_pos,selected):
 
-#	if (SongDict[Curr_pos][1] == unheard and count > 20 and count< min(set1[-1])) or (SongDict[Curr_pos][1] == heard and count<min(set1[-1])):
+	if (SongDict[Curr_pos][1] == unheard and count > 20 and count< min(set1[-1])) or (SongDict[Curr_pos][1] == heard and count<min(set1[-1])):
 		
-#		RewardMatrix[Curr_pos][selected]+= jump(RewardMatrix)
+		RewardMatrix[Curr_pos][selected]+= jump(RewardMatrix)
 
-#	else:
-#		RewardMatrix[Curr_pos][selected]+=3 # for now we consider 3. later add the signals like Half listned or completely
+	else:
+		RewardMatrix[Curr_pos][selected]+=3 # for now we consider 3. later add the signals like Half listned or completely
 
-#	rearrange_sets()
+	rearrange_sets()
 
 	
-#def rearrange_sets():
+def rearrange_sets():
 
-	# find the 
-
+	HighestRewardList= sorted(SongDict.iteritems(),key=lambda x: x[1],reverse = True)
 		
+	# lets use linked list within queues 
+	#---------------||--------------|
+	#1 2 3 4 5 6 7 	||8 9 10 11 12 1| SO KEEP POPPING AND KEEP ADDING  
+	#---------------||--------------|
+	
 
 def main():
+
 
 	curr=0
 	seq=[0,1,2,3,4,5,6,1,2,3,4,2,3,1,4,3,6,5,4,3,4,2,7,8,9,10,7,8,9,8,7,9,8,7,9,8,7,10] #morning data + evening data
@@ -72,7 +77,7 @@ def main():
 	    	r =(0.85*temp)+(0.15/len(list(set(seq)))) # adding some damping factor to those which are not being listened
 	    	normalized[curr]=r # for each song trying to determine the flow ,  i.e How one song leads to another  
 	    	r= mat(r)
-	    	v= mat(v)+(alpha*(mat(r) - (0.15*mat(v)))) # SARSA equation 
+	    	v= mat(v)+(alpha*(mat(r) - (0.15*mat(v)))) # SIMPLE equation..pretty ironic :P 
 	    	alpha=1.0/(i+1) # reduce the learning rate iteratively
 	    	curr=selection # change curr to selection
 	    	print 'Current policy : {0} and Current Reward: {1} and Alpha:{2}'.format(v,R,alpha)
