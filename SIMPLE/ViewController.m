@@ -72,7 +72,8 @@
     else if([genre isEqualToString:@"Alternative"])
         background = [UIImage imageNamed:@"SIMPLE-bg_blue.jpg"];
     else if([genre isEqualToString:@"Pop"]) background = [UIImage imageNamed:@"SIMPLE-bg_green.jpg"];
-    else background = [UIImage imageNamed:@"SIMPLE-bg_red.jpg"];
+    else if([genre isEqualToString:@"Metal"]) background = [UIImage imageNamed:@"SIMPLE-bg_red.jpg"];
+    else background = [UIImage imageNamed:@"noBG.jpg"];
     
     [artworkView setImage:artworkImage];
     [bg setImage:background];
