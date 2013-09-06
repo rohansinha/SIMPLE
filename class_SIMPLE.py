@@ -19,8 +19,6 @@ SIMPLE ->
 		 	Then Global reward matrix for B,A is updated to reward points for listening to 50% A
 			column : source
 			row : destination
-
-
 """
 from numpy import *
 from uuid import *
