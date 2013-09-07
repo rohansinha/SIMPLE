@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <MediaPlayer/MediaPlayer.h>
 
-@interface ViewController : UIViewController <MPMediaPickerControllerDelegate>
+@interface PlayerController : UIViewController <MPMediaPickerControllerDelegate>
 {
     MPMusicPlayerController *musicPlayer;
     

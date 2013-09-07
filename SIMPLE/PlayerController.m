@@ -6,13 +6,13 @@
 //  Copyright (c) 2013 Rohan Sinha. All rights reserved.
 //
 
-#import "ViewController.h"
+#import "PlayerController.h"
 
-@interface ViewController ()
+@interface PlayerController ()
 
 @end
 
-@implementation ViewController
+@implementation PlayerController
 @synthesize musicPlayer;
 
 #pragma mark - Intial Load

@@ -7,13 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1C26996917DB8A9F0003A32F /* MusicViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C26996817DB8A9F0003A32F /* MusicViewController.m */; };
 		1C6A1D2217BCF0250087B9DE /* SIMPLE-bg_purple.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1C6A1D1D17BCF0250087B9DE /* SIMPLE-bg_purple.jpg */; };
 		1C6A1D2317BCF0250087B9DE /* SIMPLE-bg_red.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1C6A1D1E17BCF0250087B9DE /* SIMPLE-bg_red.jpg */; };
 		1C6A1D2417BCF0250087B9DE /* SIMPLE-bg_blue.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1C6A1D1F17BCF0250087B9DE /* SIMPLE-bg_blue.jpg */; };
 		1C6A1D2517BCF0250087B9DE /* SIMPLE-bg_green.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1C6A1D2017BCF0250087B9DE /* SIMPLE-bg_green.jpg */; };
 		1C6A1D2617BCF0250087B9DE /* noBG.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1C6A1D2117BCF0250087B9DE /* noBG.jpg */; };
 		1C7244A217B2A71700A60BF1 /* Appicon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C7244A117B2A71700A60BF1 /* Appicon.png */; };
-		1CFC7621174B92AB00ECF5A5 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CFC7620174B92AB00ECF5A5 /* UIKit.framework */; };
+		1CFC7621174B92AB00ECF5A5 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CFC7620174B92AB00ECF5A5 /* UIKit.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		1CFC7623174B92AB00ECF5A5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CFC7622174B92AB00ECF5A5 /* Foundation.framework */; };
 		1CFC7625174B92AB00ECF5A5 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CFC7624174B92AB00ECF5A5 /* CoreGraphics.framework */; };
 		1CFC762B174B92AB00ECF5A5 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1CFC7629174B92AB00ECF5A5 /* InfoPlist.strings */; };
@@ -22,13 +23,15 @@
 		1CFC7633174B92AB00ECF5A5 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CFC7632174B92AB00ECF5A5 /* Default.png */; };
 		1CFC7635174B92AB00ECF5A5 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CFC7634174B92AB00ECF5A5 /* Default@2x.png */; };
 		1CFC7637174B92AB00ECF5A5 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CFC7636174B92AB00ECF5A5 /* Default-568h@2x.png */; };
-		1CFC763A174B92AB00ECF5A5 /* MainStoryboard_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1CFC7638174B92AB00ECF5A5 /* MainStoryboard_iPhone.storyboard */; };
-		1CFC7640174B92AB00ECF5A5 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CFC763F174B92AB00ECF5A5 /* ViewController.m */; };
+		1CFC763A174B92AB00ECF5A5 /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1CFC7638174B92AB00ECF5A5 /* MainStoryboard.storyboard */; };
+		1CFC7640174B92AB00ECF5A5 /* PlayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CFC763F174B92AB00ECF5A5 /* PlayerController.m */; };
 		1CFC7685174B940E00ECF5A5 /* noArtworkImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CFC7684174B940E00ECF5A5 /* noArtworkImage.png */; };
 		1CFC7687174B96F700ECF5A5 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CFC7686174B96F700ECF5A5 /* MediaPlayer.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1C26996717DB8A9F0003A32F /* MusicViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MusicViewController.h; path = ../../../../Code/Xcode/SIMPLE/SIMPLE/MusicViewController.h; sourceTree = "<group>"; };
+		1C26996817DB8A9F0003A32F /* MusicViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MusicViewController.m; path = ../../../../Code/Xcode/SIMPLE/SIMPLE/MusicViewController.m; sourceTree = "<group>"; };
 		1C6A1D1D17BCF0250087B9DE /* SIMPLE-bg_purple.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "SIMPLE-bg_purple.jpg"; sourceTree = "<group>"; };
 		1C6A1D1E17BCF0250087B9DE /* SIMPLE-bg_red.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "SIMPLE-bg_red.jpg"; sourceTree = "<group>"; };
 		1C6A1D1F17BCF0250087B9DE /* SIMPLE-bg_blue.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "SIMPLE-bg_blue.jpg"; sourceTree = "<group>"; };
@@ -49,9 +52,9 @@
 		1CFC7632174B92AB00ECF5A5 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		1CFC7634174B92AB00ECF5A5 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		1CFC7636174B92AB00ECF5A5 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
-		1CFC7639174B92AB00ECF5A5 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard_iPhone.storyboard; sourceTree = "<group>"; };
-		1CFC763E174B92AB00ECF5A5 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		1CFC763F174B92AB00ECF5A5 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		1CFC7639174B92AB00ECF5A5 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard.storyboard; sourceTree = "<group>"; };
+		1CFC763E174B92AB00ECF5A5 /* PlayerController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PlayerController.h; sourceTree = "<group>"; };
+		1CFC763F174B92AB00ECF5A5 /* PlayerController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PlayerController.m; sourceTree = "<group>"; };
 		1CFC7684174B940E00ECF5A5 /* noArtworkImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = noArtworkImage.png; sourceTree = "<group>"; };
 		1CFC7686174B96F700ECF5A5 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -104,9 +107,11 @@
 			children = (
 				1CFC762F174B92AB00ECF5A5 /* AppDelegate.h */,
 				1CFC7630174B92AB00ECF5A5 /* AppDelegate.m */,
-				1CFC7638174B92AB00ECF5A5 /* MainStoryboard_iPhone.storyboard */,
-				1CFC763E174B92AB00ECF5A5 /* ViewController.h */,
-				1CFC763F174B92AB00ECF5A5 /* ViewController.m */,
+				1CFC7638174B92AB00ECF5A5 /* MainStoryboard.storyboard */,
+				1CFC763E174B92AB00ECF5A5 /* PlayerController.h */,
+				1CFC763F174B92AB00ECF5A5 /* PlayerController.m */,
+				1C26996717DB8A9F0003A32F /* MusicViewController.h */,
+				1C26996817DB8A9F0003A32F /* MusicViewController.m */,
 				1CFC7627174B92AB00ECF5A5 /* Supporting Files */,
 			);
 			path = SIMPLE;
@@ -194,7 +199,7 @@
 				1C6A1D2417BCF0250087B9DE /* SIMPLE-bg_blue.jpg in Resources */,
 				1CFC7635174B92AB00ECF5A5 /* Default@2x.png in Resources */,
 				1CFC7637174B92AB00ECF5A5 /* Default-568h@2x.png in Resources */,
-				1CFC763A174B92AB00ECF5A5 /* MainStoryboard_iPhone.storyboard in Resources */,
+				1CFC763A174B92AB00ECF5A5 /* MainStoryboard.storyboard in Resources */,
 				1C7244A217B2A71700A60BF1 /* Appicon.png in Resources */,
 				1CFC7685174B940E00ECF5A5 /* noArtworkImage.png in Resources */,
 			);
@@ -207,9 +212,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1C26996917DB8A9F0003A32F /* MusicViewController.m in Sources */,
 				1CFC762D174B92AB00ECF5A5 /* main.m in Sources */,
 				1CFC7631174B92AB00ECF5A5 /* AppDelegate.m in Sources */,
-				1CFC7640174B92AB00ECF5A5 /* ViewController.m in Sources */,
+				1CFC7640174B92AB00ECF5A5 /* PlayerController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -224,12 +230,12 @@
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
-		1CFC7638174B92AB00ECF5A5 /* MainStoryboard_iPhone.storyboard */ = {
+		1CFC7638174B92AB00ECF5A5 /* MainStoryboard.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
 				1CFC7639174B92AB00ECF5A5 /* en */,
 			);
-			name = MainStoryboard_iPhone.storyboard;
+			name = MainStoryboard.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
