@@ -47,15 +47,15 @@ class Song(object):
 	used = 0     #static counter which keeps track of the number of times the player was used 
 	index =0     #static counter of each song in the matrix
 
-	def init(self,n,name,duration):
+	def __init__(self,n,name,duration):
 		
 		d = SongException(1,'Song already exists')
 		if name not in table:
 			self.name = name #name of the song
 			self.duration = duration+0.0 #duration of the song
-			self.v10 = array([1.0/len(table) for i in range(n)])
-			self.v50 = array([1.0/len(table) for i in range(n)])
-			self.v80 = array([1.0/len(table) for i in range(n)])
+			self.v10 = array([1.0/n for i in range(n)])
+			self.v50 = array([1.0/n for i in range(n)])
+			self.v80 = array([1.0/n for i in range(n)])
 			self.r10 = array([0.0 for i in range(n)])
 			self.r50 = array([0.0 for i in range(n)])
 			self.r80 = array([0.0 for i in range(n)])
@@ -64,7 +64,7 @@ class Song(object):
 			Song.index+=1 #incrementing the index everytime 
 			self.flag = False #setting flag to unheard
 			self.hearing = 0.0
-			table[name] = [uuid4(),self] #setting the uuid of the song
+			table[name] = self #setting the uuid of the song
 		
 		else:
 			raise d #if the song already exist in the playlist
@@ -113,7 +113,7 @@ class Song(object):
 		
 		self.update(per,self.next_state.INDEX) #update the learner . Passing the %heard and the index of the song
 		Song.used+=1
-		#self.flag = True #Song heard 
+		self.flag = True #Song heard 
 	
 
 	def Learner(self,pos,per):
@@ -239,7 +239,7 @@ class Song(object):
  
 class Brainy_Song(object):
 		
-		def init(self,curr): #pass the starting song 
+		def __init__(self,curr): #pass the starting song 
 			
 			h = SongException(3,'Song doesnot exist in the playlist\n')
 			epsilon = 0.7
@@ -255,27 +255,40 @@ class Brainy_Song(object):
 				Brainy_Song.gamma = 0.85 # Wont change. Lets see if both classes actually need the same gamma or not
 				Brainy_Song.alpha = 1.0 #alpha will decay accordingly and will be reset everytime user resets the player
 		
-# For this i need to use the "Flag module" so that the same song is not suggested everytime 
+	
 		def predict(self):
 			temp = random()
 			if temp < Brainy_Song.epsilon:
-				predicted_index = Brainy_Song.index(max(Brainy_Song.v[0]))
-				
+				#predicted_index = Brainy_Song.index(max(Brainy_Song.v[0]))
+				best_unflagged = sorted([(Brainy_Song.v[table[i].INDEX],table[i].INDEX) for i in table.iterkeys() if not table[i].flag],reverse = True) #Storing the unheard songs
+				print 'According to Global Policy Training The predicted song is {0}' .format(best_unflagged[0][1]) #Displaying the index
 
+			else:
+				heard = self.hearing 
+				if heard>=0 and heard<50:
+					best_unflagged = sorted([(table[i].v10,table[i].INDEX) for i in table.iterkeys() if not table[i].flag],reverse = True)
+				
+				elif heard>=50 and heard<80:
+					best_unflagged = sorted([(table[i].v50,table[i].INDEX) for i in table.iterkeys() if not table[i].flag],reverse = True)
+				
+				else :
+					best_unflagged = sorted([(table[i].v80,table[i].INDEX) for i in table.iterkeys() if not table[i].flag],reverse = True)
+				print 'According to THE HISTORIC LEARNING EXPERIENCE .. the prediction is {0}'.format(best_unflagged[0][1])
 
 		def run(self):
-			
 			current = self.current
 			print 'Listening to {0}:'.format(current)
-			table[current][1].play()
-			hearing = table[current][1].hearing+0.0 #deciding how much the song will be rewarded
-			duration = table[current][1].duration 
+			table[current].play()
+			hearing = table[current].hearing+0.0 #deciding how much the song will be rewarded
+			duration = table[current].duration 
 			per = hearing
-			curr_index = table[current][1].INDEX  #Index of the current song 
+			curr_index = table[current].INDEX  #Index of the current song 
 			
 			while 1:
+				#Here we add the prediction module 
 					
-				next_song_index = table[current][1].next_state.INDEX #the the position of the song in the matrix
+
+				next_song_index = table[current].next_state.INDEX #the the position of the song in the matrix
 				
 				if per>=0 and per<=10:
 					Brainy_Song.R[next_song_index][curr_index]+=0
@@ -288,15 +301,12 @@ class Brainy_Song(object):
 				
 				temp = Brainy_Song.R.copy() #taking only the copy of the matrix  
 				
-				#temp stores the temporary normalized matrix
 				for i in range(len(table)):
 					
 					if Brainy_Song.R[:,i].sum()<=0:
 						continue
-				
-					#temp[:,i] = Brainy_Song.R[:,i]/sqrt(Brainy_Song.R[:,i].sum())
 					temp[:,i] = Brainy_Song.R[:,i]/sqrt(Brainy_Song.R[:].sum())
-				print 'Showing temp {0}'.format(temp)
+				
 				for i in range(len(table)):
 					Brainy_Song.r.append(temp[:,i].sum()) #will normalize later 
 	
@@ -307,17 +317,16 @@ class Brainy_Song(object):
 				Brainy_Song.v+=expected
 				Brainy_Song.v = Brainy_Song.v/Brainy_Song.v.sum()	
 				curr_index = next_song_index
-				current = table[current][1].next_song # current song becomes the the current song's next song 
+				current = table[current].next_song # current song becomes the the current song's next song 
 				
 				print 'The reward Matrix {0}\n'.format(Brainy_Song.r)
 				print 'Global learning policy {0}\n'.format(Brainy_Song.v)
 				print '2D matrix {0}\n'.format(Brainy_Song.R)
 			
-				hearing = table[current][1].hearing+0.0
-				table[current][1].play() #the current song name is the key of the table 
-				duration = table[current][1].duration
+				hearing = table[current].hearing+0.0
+				table[current].play() #the current song name is the key of the table 
+				duration = table[current].duration
 				per = hearing
 				print 'Current Song :{0} \n Percent: {1} \n Hearing:{2} \n Duration:{3}'.format(current,per,hearing,duration)	
-				#add the prediction module 
-				#import timing module
-				#incorporate SVM large margin classifier : either with Gaussian kernel or linear kernel
+				
+				
