@@ -1,45 +1,30 @@
-Coded only the part where the user manually selects songs and player learns the user.
-The states,action pair is defined as (current_song,how_much_heard(%),next_song).
-       Heard : we use only 10%,50% and 80%.
-       Table : we store the values of the states in dictionary called Table.
-               We initialise new entries to 0.
-Since we are use the concept of immediate step prediction:
-based on how many times we have used the player and the heard(%) of the song we assign reward.
-This reward is assigned to two places:
-        1. Reward Matrix: The reward matrix will be used for our "creating sets"
-        2. UpdateQvalues: This is where we update the state  (curr_song,heard(%),next_song)
-               2.1. If a state is not present in the table we simply add it.
-               basically we are adding statess that  we are experiencing. 
-               we update the state like this : table[state] += alpha(reward + gamma*(highestQvalue(next_state))-table[state])
-               How to compute the highestQvalue of next_state:
-                      next_state = (next_song,[10,50,80],[all the possible songs])
-                       so, when the user selects a song->
-                               in the loop it computes all the possible states by the next song
-                               if the state doesnt exist in the table  then add the state to table and initialise to 0
-                       pass this (current_state,heard(%),all the next state keys) to the updateQvalue function
+## SIMPLE - THE NEXT MUSIC PLAYER 
 
+1. Each team should have a fork of this repository
+2. Team members should clone from the fork
+3. Create a branch ```submission/<Team Name>```
+4. Make a folder with your ```<Project name>``` in the branch
+5. Work inside your ___Project folder___, Commit changes and push to the branch ```git push origin submission/<Team Name>```
+6. After completing the hack ,each team must send a **Pull request** to merge the Branch
 
-example : (A,10,B) : i heard 10% of A and switched to B. table[(A,10,B)]=0+alpha(-1+0-0)
-       :  (B,80,D) : heard 80% of B and transit to D. table[(B,80,D)]=0+alpha(5+0-0)
-       :  (D,80,A):  heard 80% of D and transit to A. table[(D,80,A)]=0+alpha(5+0-0) : 0 bcoz highestQvalued(A) is 0 not -1
+theta0 theta1 theta2 : behaviour of each element on x0,x1 and x2
 
-SIMPLE MODE : player takes its own intelligent decision
-USER MODE : user selects songs and player understands
+#Weather
+1.songs not heard : Initial prediction based on **genre** and the music learner equation
+2.Same song will be rated differently on different weather occasions
 
-Reason why we are considering the HighestQvalue (nextstate)
-Say we are in "SIMPLE Mode" and the user doesnt make any selection.
-user listens to A only 10% and wishes to switch. it will check for which song[A,B,C,D,E..] table(A,10%,[A,B,C,D,E...]) gives the max value
- say the guy heard E many times in general . It will obviously have high reward 
- in "USER MODE" if we are at (A,10,E) ... it will select the highestQvalue of E and make some update
- say B is heard not much often as compared to E but user selects B after 10% of A
- in "USER MODE"  we are at (A,10,B) ... it will select the highestQvalue of B and make some update 
- SAY NOW WE ARE in "SIMPLE MODE"
- we wish to hear only 10% of A...so the state is (A,10,action): it will select E coz (A,10,E) gives the max reward
- ---------------------------------------------------------------------------------------------------------------------
- I get what you are doing, but you will need to change the dependance of next state on the percentage of the song we have heard.
- did you implement this to predict a song based on how the user is currently interacting with the player? the idea is good,
- but implementation of this codde will require more than 4 times the training we would normally require...you get why na
- i like the idea of suggesting the next song based on how you currently feel..it's a good measure of your taste by considering 
- how we listen to songs. Don't make any changes to this, we will need to come up with a way to reduce the amount of training.
- we can try some sort linking between sets
+It will be better to keep track of genre: more preference to genre over artist
 
+3.Later, we can have a "General Mode" : where songs will be predicted purely on the basis of how the user reacts to the song till now
+its independent of time
+
+4.other **Climate Mode** : User listens to certain no of songs. Many songs are not heard yet . **SIMPLE** understands the features of the song heard during that climate mode.
+
+#Confusion 
+Rain can have "3 parameters" ...each parameter will have 3 other internal parameters : [np1,np2,np3][genre,artist,heard]
+club these parameters into 1 and we obtain one parameter :D
+
+#Future Prediction Analysis
+1.use logistic regression to predict the song u havent rated and measure its potential : Each Song is identified by its :[genre,artist,heard].
+2.push that rating to the global policy for that weather.
+3.Live audio streaming : based on correlation of interest.  
