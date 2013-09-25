@@ -69,8 +69,37 @@ class Song(object):
 		else:
 			raise d #if the song already exist in the playlist
 
+	def predict(self,best_global_song):
+		
+		print ' ***********************************************'
+		print 'Displaying the songs that are heard \n'
+		for i in table.iterkeys():
+			if table[i].flag:
+				print table[i].name
+		print '*************************************************'
 
-	def play(self):
+		heard = self.hearing 
+		if heard>=0 and heard<50:
+			best_unflagged = sorted([(table[i].v10[table[i].INDEX],table[i].name) for i in table.iterkeys() if not table[i].flag],reverse = True)
+			
+		elif heard>=50 and heard<80:
+			best_unflagged = sorted([(table[i].v50[table[i].INDEX],table[i].name) for i in table.iterkeys() if not table[i].flag],reverse = True)
+				
+		else :
+			best_unflagged = sorted([(table[i].v80[table[i].INDEX],table[i].name) for i in table.iterkeys() if not table[i].flag],reverse = True)
+			
+		expectancy_list = []
+		for i in best_global_song:
+			for j in best_unflagged:
+				if i[1]==j[1]:
+					expectancy_list.append((0.7*i[0] + 0.3*j[0],i[1]))
+		
+		#expectancy_list = sorted([[(0.7*i[0]+0.3*j[0],i[1]) for j in best_unflagged if i[1]==j[1]] for i in best_global_song ],reverse=True)
+		expectancy_list = sorted(expectancy_list,reverse = True)
+		print 'The Best Suggested Song : {0}'.format(expectancy_list[0][1])
+		print ' The Expectancy is {0} '.format(expectancy_list)
+
+	def play(self,best_global_song):
 		
 		#d = SongException(1,'Song already exists')
 		#if self.flag:
@@ -80,7 +109,7 @@ class Song(object):
 		if Song.used==0:
 			temp= input('The player is being used the first time \n How much have you heard%:')
 			per = (temp/self.duration)*100
-			if per>0 and per<50:
+			if per>=0 and per<50:
 				self.hearing = 10
 			elif per>=50 and per<80:
 				self.hearing = 50
@@ -88,6 +117,10 @@ class Song(object):
 				self.hearing = 80
 
 		logging.info('You are hearing {0} and have heard {1}'.format(self.name,self.hearing))
+		
+		self.flag = True #Song heard 
+		#Lets predict now 
+		self.predict(best_global_song)
 		
 		self.next_song = raw_input('Enter the next song:')
 		self.next_state = table[self.next_song]
@@ -98,7 +131,7 @@ class Song(object):
 			logging.info('Listening to {0}'.format(self.next_state.name))
 		
 		print ' Duration of {0}: {1}'.format(self.next_state.name,self.next_state.duration)
-		mins = input('How much have you heard:')+0.0
+		mins = input('How much have you heard(mins):')+0.0
 		per = (mins/self.next_state.duration)*100
 		print 'Per :{0}'.format(per)
 		
@@ -110,10 +143,10 @@ class Song(object):
 		
 		elif per>=80 and per<=100:
 			self.next_state.hearing = 80
-		
+	
+		self.next_state.flag = True  #Next song heard is also flagged
 		self.update(per,self.next_state.INDEX) #update the learner . Passing the %heard and the index of the song
 		Song.used+=1
-		self.flag = True #Song heard 
 	
 
 	def Learner(self,pos,per):
@@ -256,38 +289,21 @@ class Brainy_Song(object):
 				Brainy_Song.alpha = 1.0 #alpha will decay accordingly and will be reset everytime user resets the player
 		
 	
-		def predict(self):
-			temp = random()
-			if temp < 0.7:
-				#predicted_index = Brainy_Song.index(max(Brainy_Song.v[0]))
-				best_unflagged = sorted([(Brainy_Song.v[table[i].INDEX],table[i].name) for i in table.iterkeys() if not table[i].flag],reverse = True) #Storing the unheard songs
-				print 'According to Global Policy Training The predicted song is {0}' .format(best_unflagged[0][1]) #Displaying the index
-
-			else:
-				heard = self.hearing 
-				if heard>=0 and heard<50:
-					best_unflagged = sorted([(table[i].v10,table[i].name) for i in table.iterkeys() if not table[i].flag],reverse = True)
-				
-				elif heard>=50 and heard<80:
-					best_unflagged = sorted([(table[i].v50,table[i].name) for i in table.iterkeys() if not table[i].flag],reverse = True)
-				
-				else :
-					best_unflagged = sorted([(table[i].v80,table[i].name) for i in table.iterkeys() if not table[i].flag],reverse = True)
-				print 'According to THE HISTORIC LEARNING EXPERIENCE .. the prediction is {0}'.format(best_unflagged[0][1])
-
 		def run(self):
 			current = self.current
 			print 'Listening to {0}:'.format(current)
-			table[current].play()
+
+			#It would be better if we predict the next song in the Play function. We pass the Global Policy Tranining Song to the Play()
+			
+			best_unflagged = sorted([(Brainy_Song.v[table[i].INDEX],table[i].name) for i in table.iterkeys() if not table[i].flag],reverse = True)	
+			table[current].play(best_unflagged) #Passing the entire unflagged list 
 			hearing = table[current].hearing+0.0 #deciding how much the song will be rewarded
 			duration = table[current].duration 
 			per = hearing
 			curr_index = table[current].INDEX  #Index of the current song 
 			
 			while 1:
-				#Here we add the prediction module 
-				self.predict();	
-
+				
 				next_song_index = table[current].next_state.INDEX #the the position of the song in the matrix
 				
 				if per>=0 and per<=10:
@@ -324,7 +340,17 @@ class Brainy_Song(object):
 				print '2D matrix {0}\n'.format(Brainy_Song.R)
 			
 				hearing = table[current].hearing+0.0
-				table[current].play() #the current song name is the key of the table 
+				
+				
+				best_unflagged = sorted([(Brainy_Song.v[table[i].INDEX],table[i].name) for i in table.iterkeys() if not table[i].flag],reverse = True)
+				table[current].play(best_unflagged) # Pass the entire list  
+				
+				flagged_songs = len(Brainy_Song.v)-len(best_unflagged)	
+				if flagged_songs>=3: #If more than 3 songs are flagged : Reset those flags
+					for i in table.iterkeys():
+						table[i].flag = False
+					best_unflagged = []
+				
 				duration = table[current].duration
 				per = hearing
 				print 'Current Song :{0} \n Percent: {1} \n Hearing:{2} \n Duration:{3}'.format(current,per,hearing,duration)	
