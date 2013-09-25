@@ -90,7 +90,7 @@ class Song(object):
 		logging.info('You are hearing {0} and have heard {1}'.format(self.name,self.hearing))
 		
 		self.next_song = raw_input('Enter the next song:')
-		self.next_state = table[self.next_song][1]
+		self.next_state = table[self.next_song]
 		
 		if self.next_state.flag: #check if the next song is heard or not 
 			raise h
@@ -258,21 +258,21 @@ class Brainy_Song(object):
 	
 		def predict(self):
 			temp = random()
-			if temp < Brainy_Song.epsilon:
+			if temp < 0.7:
 				#predicted_index = Brainy_Song.index(max(Brainy_Song.v[0]))
-				best_unflagged = sorted([(Brainy_Song.v[table[i].INDEX],table[i].INDEX) for i in table.iterkeys() if not table[i].flag],reverse = True) #Storing the unheard songs
+				best_unflagged = sorted([(Brainy_Song.v[table[i].INDEX],table[i].name) for i in table.iterkeys() if not table[i].flag],reverse = True) #Storing the unheard songs
 				print 'According to Global Policy Training The predicted song is {0}' .format(best_unflagged[0][1]) #Displaying the index
 
 			else:
 				heard = self.hearing 
 				if heard>=0 and heard<50:
-					best_unflagged = sorted([(table[i].v10,table[i].INDEX) for i in table.iterkeys() if not table[i].flag],reverse = True)
+					best_unflagged = sorted([(table[i].v10,table[i].name) for i in table.iterkeys() if not table[i].flag],reverse = True)
 				
 				elif heard>=50 and heard<80:
-					best_unflagged = sorted([(table[i].v50,table[i].INDEX) for i in table.iterkeys() if not table[i].flag],reverse = True)
+					best_unflagged = sorted([(table[i].v50,table[i].name) for i in table.iterkeys() if not table[i].flag],reverse = True)
 				
 				else :
-					best_unflagged = sorted([(table[i].v80,table[i].INDEX) for i in table.iterkeys() if not table[i].flag],reverse = True)
+					best_unflagged = sorted([(table[i].v80,table[i].name) for i in table.iterkeys() if not table[i].flag],reverse = True)
 				print 'According to THE HISTORIC LEARNING EXPERIENCE .. the prediction is {0}'.format(best_unflagged[0][1])
 
 		def run(self):
@@ -286,7 +286,7 @@ class Brainy_Song(object):
 			
 			while 1:
 				#Here we add the prediction module 
-					
+				self.predict();	
 
 				next_song_index = table[current].next_state.INDEX #the the position of the song in the matrix
 				
