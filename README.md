@@ -1,7 +1,6 @@
 ## SIMPLE - THE NEXT MUSIC PLAYER 
 
-
-theta0 theta1 theta2 : behaviour of each element on x0,x1 and x2
+Next Gen Music Player
 
 #Weather
 1.songs not heard : Initial prediction based on **genre** and the music learner equation
@@ -9,7 +8,7 @@ theta0 theta1 theta2 : behaviour of each element on x0,x1 and x2
 
 It will be better to keep track of genre: more preference to genre over artist
 
-3.Later, we can have a "General Mode" : where songs will be predicted purely on the basis of how the user reacts to the song till now
+3.Later, we can have a **General Mode** : where songs will be predicted purely on the basis of how the user reacts to the song till now
 its independent of time
 
 4.other **Climate Mode** : User listens to certain no of songs. Many songs are not heard yet . **SIMPLE** understands the features of the song heard during that climate mode.
@@ -20,5 +19,7 @@ club these parameters into 1 and we obtain one parameter :D
 
 #Future Prediction Analysis
 1.use logistic regression to predict the song u havent rated and measure its potential : Each Song is identified by its :[genre,artist,heard].
+
 2.push that rating to the global policy for that weather.
+
 3.Live audio streaming : based on correlation of interest.  
