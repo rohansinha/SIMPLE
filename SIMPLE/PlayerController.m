@@ -27,12 +27,12 @@
 	// Do any additional setup after loading the view, typically from a nib.
     [[UIApplication sharedApplication] setStatusBarHidden:YES];
     musicPlayer = [MPMusicPlayerController iPodMusicPlayer];
-    
 	if ([musicPlayer playbackState] == MPMusicPlaybackStatePlaying){
-        [playPauseButton setTitle:@"||" forState:UIControlStateNormal];
+        [playPauseButton setImage:[UIImage imageNamed:@"pause.png"] forState:normal];
         //[playPosition setValue:[musicPlayer currentPlaybackTime]];
+        NSLog(@"works");
     }
-    else [playPauseButton setTitle:@"|>" forState:UIControlStateNormal];
+    else [playPauseButton setImage:[UIImage imageNamed:@"play.png"] forState:normal];
     
     [self registerMediaPlayerNotifications];
     //[playPosition setValue:[musicPlayer currentPlaybackTime]];
@@ -162,16 +162,16 @@
     
     NSString *titleString = [currentItem valueForProperty:MPMediaItemPropertyTitle];
     if (titleString)
-        titleLabel.text = [NSString stringWithFormat:@"Title: %@",titleString];
-    else titleLabel.text = @"Title: Unknown title";
+        titleLabel.text = [NSString stringWithFormat:@"%@",titleString];
+    else titleLabel.text = @"Unknown title";
     
     NSString *artistString = [currentItem valueForProperty:MPMediaItemPropertyArtist];
-    if (artistString) artistLabel.text = [NSString stringWithFormat:@"Artist: %@", artistString];
-    else artistLabel.text = @"Artist: Unknown artist";
+    if (artistString) artistLabel.text = [NSString stringWithFormat:@"%@", artistString];
+    else artistLabel.text = @"Unknown artist";
     
     NSString *albumString = [currentItem valueForProperty:MPMediaItemPropertyAlbumTitle];
-    if (albumString) albumLabel.text = [NSString stringWithFormat:@"Album: %@", albumString];
-    else albumLabel.text = @"Album: Unknown album";
+    if (albumString) albumLabel.text = [NSString stringWithFormat:@"%@", albumString];
+    else albumLabel.text = @"Unknown album";
 }
 
 - (void) handle_PlaybackStateChanged: (id) notification
@@ -179,11 +179,11 @@
     MPMusicPlaybackState playbackState = [musicPlayer playbackState];
 	
 	if (playbackState == MPMusicPlaybackStatePaused)
-        [playPauseButton setTitle:@"|>" forState:UIControlStateNormal];
+        [playPauseButton setImage:[UIImage imageNamed:@"play.png"] forState:normal];
     else if (playbackState == MPMusicPlaybackStatePlaying)
-        [playPauseButton setTitle:@"||" forState:UIControlStateNormal];
+        [playPauseButton setImage:[UIImage imageNamed:@"pause.png"] forState:normal];
 	else if (playbackState == MPMusicPlaybackStateStopped) {
-        [playPauseButton setTitle:@"|>" forState:UIControlStateNormal];
+        [playPauseButton setImage:[UIImage imageNamed:@"play.png"] forState:normal];
 		[musicPlayer stop];
     }
 }
