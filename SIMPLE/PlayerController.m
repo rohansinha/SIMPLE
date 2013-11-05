@@ -7,15 +7,20 @@
 //
 
 #import "PlayerController.h"
-
-@interface PlayerController ()
-
-@end
+#import <sqlite3.h>
 
 @implementation PlayerController
 @synthesize musicPlayer;
 
 #pragma mark - Intial Load
+
+- (NSString *)dataFilePath
+{
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    return [documentsDirectory stringByAppendingPathComponent:@"simple_data.sqlite"];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -31,6 +36,83 @@
     
     [self registerMediaPlayerNotifications];
     //[playPosition setValue:[musicPlayer currentPlaybackTime]];
+    
+    //*****-=-=-=-Gestures Stuff-=-=-=-*****
+    /*UISwipeGestureRecognizer *horizontal =
+    [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(reportHorizontalSwipe:)];
+    horizontal.direction = UISwipeGestureRecognizerDirectionLeft | UISwipeGestureRecognizerDirectionRight;
+    [self.view addGestureRecognizer:horizontal];*/
+    
+    UISwipeGestureRecognizer *vertical =
+    [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(reportVerticalSwipe:)];
+    vertical.direction = UISwipeGestureRecognizerDirectionUp | UISwipeGestureRecognizerDirectionDown;
+    [self.view addGestureRecognizer:vertical];
+    
+    [self initializeDatabase];
+}
+
+#pragma mark - Database Stuff
+- (void)initializeDatabase
+{
+    sqlite3 *database;
+    if (sqlite3_open([[self dataFilePath] UTF8String], &database) != SQLITE_OK) {
+        sqlite3_close(database);
+        NSAssert(0, @"Failed to open database");
+    }
+    NSString *createSQL = @"CREATE TABLE IF NOT EXISTS FIELDS "
+    "(ROW INTEGER PRIMARY KEY, FIELD_DATA TEXT);";
+    char *errorMsg;
+    if (sqlite3_exec (database, [createSQL UTF8String], NULL, NULL, &errorMsg) != SQLITE_OK) {
+        sqlite3_close(database);
+        NSAssert(0, @"Error creating table: %s", errorMsg);
+    }
+    NSString *query = @"SELECT ROW, FIELD_DATA FROM FIELDS ORDER BY ROW";
+    sqlite3_stmt *statement;
+    if (sqlite3_prepare_v2(database, [query UTF8String], -1, &statement, nil) == SQLITE_OK)
+    {
+        while (sqlite3_step(statement) == SQLITE_ROW) {
+            //int row = sqlite3_column_int(statement, 0);
+            //char *rowData = (char *)sqlite3_column_text(statement, 1);
+            //NSString *fieldValue = [[NSString alloc] initWithString:rowData];
+            //UITextField *field = self.lineFields[row];
+            //field.text = fieldValue;
+        }
+        sqlite3_finalize(statement);
+    }
+    sqlite3_close(database);
+    UIApplication *app = [UIApplication sharedApplication];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(applicationWillResignActive:)
+                                                 name:UIApplicationWillResignActiveNotification
+                                               object:app];
+}
+
+- (void)applicationWillResignActive:(NSNotification *)notification
+{
+    sqlite3 *database;
+    if (sqlite3_open([[self dataFilePath] UTF8String], &database)!= SQLITE_OK) {
+        sqlite3_close(database);
+        NSAssert(0, @"Failed to open database");
+    }
+    for (int i = 0; i < 4; i++)
+    {
+        // UITextField *field = self.lineFields[i];
+        // Once again, inline string concatenation to the rescue:
+        char *update = "INSERT OR REPLACE INTO FIELDS (ROW, FIELD_DATA) "
+        "VALUES (?, ?);";
+        char *errorMsg = NULL;
+        sqlite3_stmt *stmt;
+        if (sqlite3_prepare_v2(database, update, -1, &stmt, nil) == SQLITE_OK)
+        {
+            sqlite3_bind_int(stmt, 1, i);
+        //  sqlite3_bind_text(stmt, 2, [field.text UTF8String], -1, NULL);
+        }
+        if (sqlite3_step(stmt) != SQLITE_DONE)
+            NSAssert(0, @"Error updating table: %s", errorMsg);
+        sqlite3_finalize(stmt);
+    }
+    sqlite3_close(database);
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -112,7 +194,7 @@
 {
     MPMediaPickerController *mediaPicker = [[MPMediaPickerController alloc] initWithMediaTypes:MPMediaTypeAny];
     mediaPicker.delegate = self;
-    mediaPicker.allowsPickingMultipleItems = YES;
+    mediaPicker.showsCloudItems = NO;
     mediaPicker.prompt = @"Select song to play";
     
     [self presentViewController:mediaPicker animated:YES completion:NO];
@@ -127,10 +209,43 @@
 	[self dismissViewControllerAnimated:YES completion:NO];
 }
 
-
 - (void) mediaPickerDidCancel: (MPMediaPickerController *) mediaPicker
 {
 	[self dismissViewControllerAnimated:YES completion:NO];
+}
+
+#pragma mark - Gestures
+- (void)reportHorizontalSwipe:(UIGestureRecognizer *)recognizer
+{
+    //what to do when horizontal gesture detected
+    
+    
+}
+
+- (void)reportVerticalSwipe:(UIGestureRecognizer *)recognizer
+{
+    //what to do when vertical gesture detected
+    if([titleLabel isHidden] && [artistLabel isHidden] && [albumLabel isHidden]
+       && ![playPauseButton isHidden] && ![prevButton isHidden] && ![nextButton isHidden])
+    {
+        titleLabel.hidden = false;
+        artistLabel.hidden = false;
+        albumLabel.hidden = false;
+        playPauseButton.hidden = true;
+        prevButton.hidden = true;
+        nextButton.hidden = true;
+    } else {
+        titleLabel.hidden = true;
+        artistLabel.hidden = true;
+        albumLabel.hidden = true;
+        playPauseButton.hidden = false;
+        prevButton.hidden = false;
+        nextButton.hidden = false;
+    }
+    //if(![titleLabel isHidden] && ![artistLabel isHidden] && ![albumLabel isHidden]
+    //          && [playPauseButton isHidden] && [prevButton isHidden] && [nextButton isHidden])
+    
+    
 }
 
 #pragma mark - Controls

@@ -7,6 +7,7 @@
 //
 
 #import "MusicViewController.h"
+#import <sqlite3.h>
 
 @interface MusicViewController ()
 

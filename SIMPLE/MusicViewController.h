@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MusicViewController : UIViewController
+@interface MusicViewController : UITabBarController
 
 @end
