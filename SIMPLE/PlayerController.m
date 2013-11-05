@@ -6,11 +6,12 @@
 //  Copyright (c) 2013 Rohan Sinha. All rights reserved.
 //
 
+#import "ReflectionView.h"
 #import "PlayerController.h"
 #import <sqlite3.h>
 
 @implementation PlayerController
-@synthesize musicPlayer;
+@synthesize musicPlayer, reflectionView = _reflectionView;
 
 #pragma mark - Intial Load
 
@@ -30,9 +31,9 @@
 	if ([musicPlayer playbackState] == MPMusicPlaybackStatePlaying){
         [playPauseButton setImage:[UIImage imageNamed:@"pause.png"] forState:normal];
         //[playPosition setValue:[musicPlayer currentPlaybackTime]];
-        NSLog(@"works");
     }
     else [playPauseButton setImage:[UIImage imageNamed:@"play.png"] forState:normal];
+    [self.reflectionView updateReflection];
     
     [self registerMediaPlayerNotifications];
     //[playPosition setValue:[musicPlayer currentPlaybackTime]];
@@ -158,7 +159,8 @@
     else background = [UIImage imageNamed:@"noBG.jpg"];
     
     [artworkView setImage:artworkImage];
-    [bg setImage:background];
+    [self.reflectionView updateReflection];
+    //[bg setImage:background];
     
     NSString *titleString = [currentItem valueForProperty:MPMediaItemPropertyTitle];
     if (titleString)

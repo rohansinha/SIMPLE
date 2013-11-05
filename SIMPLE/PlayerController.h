@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 #import <MediaPlayer/MediaPlayer.h>
 
+@class ReflectionView;
+
 @interface PlayerController : UIViewController <MPMediaPickerControllerDelegate>
 {
     MPMusicPlayerController *musicPlayer;
@@ -23,9 +25,14 @@
     IBOutlet UIImageView *bg;
     //IBOutlet UISlider *playPosition;
     //IBOutlet UIProgressView *playPosition;
+    
+    //UIImageView *_imageView;
+    ReflectionView *_reflectionView;
 }
 
 @property (nonatomic, retain) MPMusicPlayerController *musicPlayer;
+@property (nonatomic, retain) IBOutlet ReflectionView *reflectionView;
+//@property (nonatomic, retain) IBOutlet UIImageView *imageView;
 
 - (IBAction)showMediaPicker:(id)sender;
 - (IBAction)prevSong:(id)sender;
