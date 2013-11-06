@@ -13,6 +13,8 @@
 @implementation PlayerController
 @synthesize musicPlayer, reflectionView = _reflectionView;
 
+NSTimer *audioTimer;
+
 #pragma mark - Intial Load
 
 - (NSString *)dataFilePath
@@ -30,7 +32,8 @@
     musicPlayer = [MPMusicPlayerController iPodMusicPlayer];
 	if ([musicPlayer playbackState] == MPMusicPlaybackStatePlaying){
         [playPauseButton setImage:[UIImage imageNamed:@"pause.png"] forState:normal];
-        //[playPosition setValue:[musicPlayer currentPlaybackTime]];
+        //[playPosition setProgress:[musicPlayer currentPlaybackTime]];
+        audioTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(audioProgressUpdate) userInfo:nil repeats:YES];
     }
     else [playPauseButton setImage:[UIImage imageNamed:@"play.png"] forState:normal];
     [self.reflectionView updateReflection];
@@ -144,19 +147,17 @@
 {
    	MPMediaItem *currentItem = [musicPlayer nowPlayingItem];
     //[playPosition setValue:[musicPlayer currentPlaybackTime]];
+    [playPosition setProgress:([musicPlayer currentPlaybackTime] / [[currentItem valueForProperty:MPMediaItemPropertyPlaybackDuration] doubleValue])];
 	UIImage *artworkImage = [UIImage imageNamed:@"noArtworkImage.png"];
-    UIImage *background = [UIImage imageNamed:@"noBG.jpg"];
 	MPMediaItemArtwork *artwork = [currentItem valueForProperty: MPMediaItemPropertyArtwork];
 	if (artwork) artworkImage = [artwork imageWithSize:CGSizeMake(320, 320)];
 	NSString *genre = [currentItem valueForProperty: MPMediaItemPropertyGenre];
     
-    if([genre isEqualToString:@"Rock"])
-        background = [UIImage imageNamed:@"SIMPLE-bg_purple.jpg"];
-    else if([genre isEqualToString:@"Alternative"])
-        background = [UIImage imageNamed:@"SIMPLE-bg_blue.jpg"];
-    else if([genre isEqualToString:@"Pop"]) background = [UIImage imageNamed:@"SIMPLE-bg_green.jpg"];
-    else if([genre isEqualToString:@"Metal"]) background = [UIImage imageNamed:@"SIMPLE-bg_red.jpg"];
-    else background = [UIImage imageNamed:@"noBG.jpg"];
+    if([genre isEqualToString:@"Rock"]) [self.reflectionView setBackgroundColor:[UIColor purpleColor]];
+    else if([genre isEqualToString:@"Alternative"]) [self.reflectionView setBackgroundColor:[UIColor blueColor]];
+    else if([genre isEqualToString:@"Pop"]) [self.reflectionView setBackgroundColor:[UIColor greenColor]];
+    else if([genre isEqualToString:@"Metal"]) [self.reflectionView setBackgroundColor:[UIColor redColor]];
+    else [self.reflectionView setBackgroundColor:[UIColor blackColor]];
     
     [artworkView setImage:artworkImage];
     [self.reflectionView updateReflection];
@@ -254,21 +255,42 @@
 
 - (IBAction)prevSong:(id)sender
 {
-    if([musicPlayer currentPlaybackTime] < 5.0)
+    if([musicPlayer currentPlaybackTime] < 5.0) {
         [musicPlayer skipToPreviousItem];
-    else [musicPlayer skipToBeginning];
+        audioTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(audioProgressUpdate) userInfo:nil repeats:YES];
+    } else {
+        [musicPlayer skipToBeginning];
+        audioTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(audioProgressUpdate) userInfo:nil repeats:YES];
+    }
 }
 
 - (IBAction)playPause:(id)sender
 {
-    if ([musicPlayer playbackState] == MPMusicPlaybackStatePlaying)
+    if ([musicPlayer playbackState] == MPMusicPlaybackStatePlaying) {
         [musicPlayer pause];
-    else [musicPlayer play];
+        [audioTimer invalidate];
+    } else {
+        [musicPlayer play];
+        audioTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(audioProgressUpdate) userInfo:nil repeats:YES];
+    }
 }
 
 - (IBAction)nextSong:(id)sender
 {
     [musicPlayer skipToNextItem];
+    audioTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(audioProgressUpdate) userInfo:nil repeats:YES];
+}
+
+- (void)audioProgressUpdate
+{
+    MPMediaItem *currentItem = [musicPlayer nowPlayingItem];
+    NSNumber *length = [currentItem valueForProperty:MPMediaItemPropertyPlaybackDuration];
+    double currentPos = [musicPlayer currentPlaybackTime];
+    double len = [length doubleValue];
+    if (musicPlayer != nil && length > 0) {
+        [playPosition setProgress:(currentPos / len)];
+        //[playPosition setValue:currentPos];
+    }
 }
 
 @end

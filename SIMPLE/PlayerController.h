@@ -24,7 +24,7 @@
     IBOutlet UIButton *nextButton;
     IBOutlet UIImageView *bg;
     //IBOutlet UISlider *playPosition;
-    //IBOutlet UIProgressView *playPosition;
+    IBOutlet UIProgressView *playPosition;
     
     //UIImageView *_imageView;
     ReflectionView *_reflectionView;
