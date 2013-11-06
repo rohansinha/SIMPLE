@@ -19,6 +19,8 @@
     IBOutlet UILabel *titleLabel;
     IBOutlet UILabel *artistLabel;
     IBOutlet UILabel *albumLabel;
+    IBOutlet UILabel *currentPlayTime;
+    IBOutlet UILabel *remainingPlayTime;
     IBOutlet UIButton *playPauseButton;
     IBOutlet UIButton *prevButton;
     IBOutlet UIButton *nextButton;

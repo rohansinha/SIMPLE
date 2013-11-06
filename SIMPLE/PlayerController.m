@@ -42,15 +42,21 @@ NSTimer *audioTimer;
     //[playPosition setValue:[musicPlayer currentPlaybackTime]];
     
     //*****-=-=-=-Gestures Stuff-=-=-=-*****
-    /*UISwipeGestureRecognizer *horizontal =
-    [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(reportHorizontalSwipe:)];
-    horizontal.direction = UISwipeGestureRecognizerDirectionLeft | UISwipeGestureRecognizerDirectionRight;
-    [self.view addGestureRecognizer:horizontal];*/
+    UISwipeGestureRecognizer *left = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(reportLeftSwipe:)];
+    left.direction = UISwipeGestureRecognizerDirectionLeft;
+    [self.view addGestureRecognizer:left];
     
-    UISwipeGestureRecognizer *vertical =
-    [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(reportVerticalSwipe:)];
-    vertical.direction = UISwipeGestureRecognizerDirectionUp | UISwipeGestureRecognizerDirectionDown;
-    [self.view addGestureRecognizer:vertical];
+    UISwipeGestureRecognizer *right = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(reportRightSwipe:)];
+    right.direction = UISwipeGestureRecognizerDirectionRight;
+    [self.view addGestureRecognizer:right];
+    
+    UISwipeGestureRecognizer *up = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(reportUpSwipe:)];
+    up.direction = UISwipeGestureRecognizerDirectionUp;
+    [self.view addGestureRecognizer:up];
+    
+    UISwipeGestureRecognizer *down = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(reportDownSwipe:)];
+    down.direction = UISwipeGestureRecognizerDirectionDown;
+    [self.view addGestureRecognizer:down];
     
     [self initializeDatabase];
 }
@@ -218,18 +224,27 @@ NSTimer *audioTimer;
 }
 
 #pragma mark - Gestures
-- (void)reportHorizontalSwipe:(UIGestureRecognizer *)recognizer
+- (void)reportLeftSwipe:(UIGestureRecognizer *)recognizer
 {
-    //what to do when horizontal gesture detected
-    
-    
+    if(![self displayMode])
+    {
+        [musicPlayer skipToPreviousItem];
+        audioTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(audioProgressUpdate) userInfo:nil repeats:YES];
+    }
 }
 
-- (void)reportVerticalSwipe:(UIGestureRecognizer *)recognizer
+- (void)reportRightSwipe:(UIGestureRecognizer *)recognizer
 {
-    //what to do when vertical gesture detected
-    if([titleLabel isHidden] && [artistLabel isHidden] && [albumLabel isHidden]
-       && ![playPauseButton isHidden] && ![prevButton isHidden] && ![nextButton isHidden])
+    if(![self displayMode])
+    {
+        [musicPlayer skipToNextItem];
+        audioTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(audioProgressUpdate) userInfo:nil repeats:YES];
+    }
+}
+
+- (void)reportDownSwipe:(UIGestureRecognizer *)recognizer
+{
+    if([self displayMode])
     {
         titleLabel.hidden = false;
         artistLabel.hidden = false;
@@ -237,7 +252,13 @@ NSTimer *audioTimer;
         playPauseButton.hidden = true;
         prevButton.hidden = true;
         nextButton.hidden = true;
-    } else {
+    }
+}
+
+- (void)reportUpSwipe:(UIGestureRecognizer *)recognizer
+{
+    if(![self displayMode])
+    {
         titleLabel.hidden = true;
         artistLabel.hidden = true;
         albumLabel.hidden = true;
@@ -245,10 +266,14 @@ NSTimer *audioTimer;
         prevButton.hidden = false;
         nextButton.hidden = false;
     }
-    //if(![titleLabel isHidden] && ![artistLabel isHidden] && ![albumLabel isHidden]
-    //          && [playPauseButton isHidden] && [prevButton isHidden] && [nextButton isHidden])
-    
-    
+}
+
+- (bool)displayMode //true for playback controls, false for info
+{
+    if([titleLabel isHidden] && [artistLabel isHidden] && [albumLabel isHidden]
+       && ![playPauseButton isHidden] && ![prevButton isHidden] && ![nextButton isHidden])
+        return true;
+    else return false;
 }
 
 #pragma mark - Controls
@@ -290,6 +315,11 @@ NSTimer *audioTimer;
     if (musicPlayer != nil && length > 0) {
         [playPosition setProgress:(currentPos / len)];
         //[playPosition setValue:currentPos];
+        [currentPlayTime setText:[NSString stringWithFormat:@"%02d:%02d", (int) currentPos/60, (int) currentPos%60]];
+        [remainingPlayTime setText:[NSString stringWithFormat:@"-%02d:%02d", (int) (len-currentPos)/60, (int) (len-currentPos)%60]];
+    } else {
+        [currentPlayTime setText:@"00:00"];
+        [remainingPlayTime setText:@"00:00"];
     }
 }
 

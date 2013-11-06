@@ -225,7 +225,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tFX-rp-2ZH">
-                                <rect key="frame" x="123" y="338" width="75" height="34"/>
+                                <rect key="frame" x="123" y="321" width="75" height="34"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" title="Library">
                                     <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
@@ -239,8 +239,8 @@
                                 </connections>
                             </button>
                             <label hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" fixedFrame="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B8H-fi-ZHm">
-                                <rect key="frame" x="15" y="355" width="290" height="40"/>
-                                <fontDescription key="fontDescription" name="Noteworthy-Light" family="Noteworthy" pointSize="22"/>
+                                <rect key="frame" x="15" y="360" width="290" height="40"/>
+                                <fontDescription key="fontDescription" name="DiwanMishafi" family="Mishafi" pointSize="35"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -256,6 +256,20 @@
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dgg-a5-ATN">
+                                <rect key="frame" x="5" y="325" width="45" height="20"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="15"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9iI-mc-pwc">
+                                <rect key="frame" x="270" y="325" width="45" height="20"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="15"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
@@ -264,11 +278,13 @@
                         <outlet property="albumLabel" destination="9j0-bI-PpO" id="hio-I1-cWm"/>
                         <outlet property="artistLabel" destination="KgS-Se-8us" id="6ve-pj-Zrd"/>
                         <outlet property="artworkView" destination="7fm-ls-lIj" id="3qb-Du-dde"/>
+                        <outlet property="currentPlayTime" destination="dgg-a5-ATN" id="JLe-2L-HeZ"/>
                         <outlet property="nextButton" destination="RaA-WE-IQn" id="8VL-zr-Fgb"/>
                         <outlet property="playPauseButton" destination="48s-OE-3uV" id="kXe-5G-UeV"/>
                         <outlet property="playPosition" destination="Eyy-Vw-560" id="3H9-k7-okm"/>
                         <outlet property="prevButton" destination="8Dd-R0-CER" id="eXV-Gp-kiQ"/>
                         <outlet property="reflectionView" destination="BfI-Fw-b4Q" id="WIl-B3-qPF"/>
+                        <outlet property="remainingPlayTime" destination="9iI-mc-pwc" id="KOF-zO-Ro3"/>
                         <outlet property="titleLabel" destination="B8H-fi-ZHm" id="uFF-Zv-M7J"/>
                     </connections>
                 </viewController>
