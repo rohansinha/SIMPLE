@@ -172,15 +172,15 @@ NSTimer *audioTimer;
     NSString *titleString = [currentItem valueForProperty:MPMediaItemPropertyTitle];
     if (titleString)
         titleLabel.text = [NSString stringWithFormat:@"%@",titleString];
-    else titleLabel.text = @"Unknown title";
+    else [titleLabel setText:@"Unknown title" ];
     
     NSString *artistString = [currentItem valueForProperty:MPMediaItemPropertyArtist];
     if (artistString) artistLabel.text = [NSString stringWithFormat:@"%@", artistString];
-    else artistLabel.text = @"Unknown artist";
+    else [artistLabel setText:@"Unknown artist"];
     
     NSString *albumString = [currentItem valueForProperty:MPMediaItemPropertyAlbumTitle];
     if (albumString) albumLabel.text = [NSString stringWithFormat:@"%@", albumString];
-    else albumLabel.text = @"Unknown album";
+    else [artistLabel setText:@"Unknown album" ];
 }
 
 - (void) handle_PlaybackStateChanged: (id) notification
@@ -202,9 +202,10 @@ NSTimer *audioTimer;
 - (IBAction)showMediaPicker:(id)sender
 {
     MPMediaPickerController *mediaPicker = [[MPMediaPickerController alloc] initWithMediaTypes:MPMediaTypeAny];
-    mediaPicker.delegate = self;
-    mediaPicker.showsCloudItems = NO;
-    mediaPicker.prompt = @"Select song to play";
+    [mediaPicker setDelegate:self];
+    [mediaPicker setShowsCloudItems:NO];
+    [mediaPicker setPrompt:@"Select song to play"];
+    [mediaPicker setAllowsPickingMultipleItems:YES];
     
     [self presentViewController:mediaPicker animated:YES completion:NO];
 }
@@ -224,16 +225,30 @@ NSTimer *audioTimer;
 }
 
 #pragma mark - Gestures
-- (void)reportLeftSwipe:(UIGestureRecognizer *)recognizer
+- (void)handle_tap:(NSSet *)touches
 {
     if(![self displayMode])
     {
-        [musicPlayer skipToPreviousItem];
-        audioTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(audioProgressUpdate) userInfo:nil repeats:YES];
+        NSUInteger numTaps = [[touches anyObject] tapCount];
+        if(numTaps)
+        {
+            if ([musicPlayer playbackState] == MPMusicPlaybackStatePlaying) {
+                [musicPlayer pause];
+                [audioTimer invalidate];
+            } else {
+                [musicPlayer play];
+                audioTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(audioProgressUpdate) userInfo:nil repeats:YES];
+            }
+        }
     }
 }
 
-- (void)reportRightSwipe:(UIGestureRecognizer *)recognizer
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    [self handle_tap:touches];
+}
+
+- (void)reportLeftSwipe:(UIGestureRecognizer *)recognizer
 {
     if(![self displayMode])
     {
@@ -242,16 +257,25 @@ NSTimer *audioTimer;
     }
 }
 
+- (void)reportRightSwipe:(UIGestureRecognizer *)recognizer
+{
+    if(![self displayMode])
+    {
+        [musicPlayer skipToPreviousItem];
+        audioTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(audioProgressUpdate) userInfo:nil repeats:YES];
+    }
+}
+
 - (void)reportDownSwipe:(UIGestureRecognizer *)recognizer
 {
     if([self displayMode])
     {
-        titleLabel.hidden = false;
-        artistLabel.hidden = false;
-        albumLabel.hidden = false;
-        playPauseButton.hidden = true;
-        prevButton.hidden = true;
-        nextButton.hidden = true;
+        [titleLabel setHidden:NO];
+        [albumLabel setHidden:NO];
+        [artistLabel setHidden:NO];
+        [playPauseButton setHidden:YES];
+        [prevButton setHidden:YES];
+        [nextButton setHidden:YES];
     }
 }
 
@@ -259,12 +283,12 @@ NSTimer *audioTimer;
 {
     if(![self displayMode])
     {
-        titleLabel.hidden = true;
-        artistLabel.hidden = true;
-        albumLabel.hidden = true;
-        playPauseButton.hidden = false;
-        prevButton.hidden = false;
-        nextButton.hidden = false;
+        [titleLabel setHidden:YES];
+        [albumLabel setHidden:YES];
+        [artistLabel setHidden:YES];
+        [playPauseButton setHidden:NO];
+        [prevButton setHidden:NO];
+        [nextButton setHidden:NO];
     }
 }
 

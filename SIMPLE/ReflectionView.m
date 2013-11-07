@@ -21,7 +21,7 @@
 
 static const CGFloat kDefaultReflectionOffset   = 2.0f;
 static const CGFloat kDefaultReflectionHeight   = 150.0f;
-static const CGFloat kDefaultReflectionAlpha    = 0.5f;
+static const CGFloat kDefaultReflectionAlpha    = 0.55f;
 
 // Helper function prototypes
 static CGImageRef CreateGradientImage(int pixelsWide, int pixelsHigh);
