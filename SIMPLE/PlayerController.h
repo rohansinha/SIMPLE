@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <MediaPlayer/MediaPlayer.h>
+#import "QueueViewController.h"
 
 @class ReflectionView;
 
@@ -33,6 +34,7 @@
 }
 
 @property (nonatomic, retain) MPMusicPlayerController *musicPlayer;
+@property (nonatomic, retain) MPMediaItemCollection *nowPlayingQueue;
 @property (nonatomic, retain) IBOutlet ReflectionView *reflectionView;
 //@property (nonatomic, retain) IBOutlet UIImageView *imageView;
 

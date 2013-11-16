@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1C0E16C8183780560057E345 /* QueueViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0E16C7183780560057E345 /* QueueViewController.m */; };
 		1C26996917DB8A9F0003A32F /* MusicViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C26996817DB8A9F0003A32F /* MusicViewController.m */; };
 		1C6BB50518299ED700FEA8CE /* next.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C6BB50118299ED700FEA8CE /* next.png */; };
 		1C6BB50618299ED700FEA8CE /* pause.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C6BB50218299ED700FEA8CE /* pause.png */; };
@@ -32,6 +33,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1C0E16C6183780560057E345 /* QueueViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QueueViewController.h; sourceTree = "<group>"; };
+		1C0E16C7183780560057E345 /* QueueViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QueueViewController.m; sourceTree = "<group>"; };
 		1C26996717DB8A9F0003A32F /* MusicViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MusicViewController.h; path = ../../../../Code/Xcode/SIMPLE/SIMPLE/MusicViewController.h; sourceTree = "<group>"; };
 		1C26996817DB8A9F0003A32F /* MusicViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MusicViewController.m; path = ../../../../Code/Xcode/SIMPLE/SIMPLE/MusicViewController.m; sourceTree = "<group>"; };
 		1C6BB50118299ED700FEA8CE /* next.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = next.png; sourceTree = "<group>"; };
@@ -120,6 +123,8 @@
 				1CFC762F174B92AB00ECF5A5 /* AppDelegate.h */,
 				1CFC7630174B92AB00ECF5A5 /* AppDelegate.m */,
 				1CFC7638174B92AB00ECF5A5 /* MainStoryboard.storyboard */,
+				1C0E16C6183780560057E345 /* QueueViewController.h */,
+				1C0E16C7183780560057E345 /* QueueViewController.m */,
 				1CE4918B180315B70008301F /* DefaultLibraryViewController.h */,
 				1CE4918C180315B70008301F /* DefaultLibraryViewController.m */,
 				1CFC763E174B92AB00ECF5A5 /* PlayerController.h */,
@@ -231,6 +236,7 @@
 				1CFC7631174B92AB00ECF5A5 /* AppDelegate.m in Sources */,
 				1CFC7640174B92AB00ECF5A5 /* PlayerController.m in Sources */,
 				1C6BB50D1829A0F000FEA8CE /* ReflectionView.m in Sources */,
+				1C0E16C8183780560057E345 /* QueueViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

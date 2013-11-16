@@ -8,10 +8,11 @@
 
 #import "ReflectionView.h"
 #import "PlayerController.h"
+#import "QueueViewController.h"
 #import <sqlite3.h>
 
 @implementation PlayerController
-@synthesize musicPlayer, reflectionView = _reflectionView;
+@synthesize musicPlayer, nowPlayingQueue, reflectionView = _reflectionView;
 
 NSTimer *audioTimer;
 
@@ -43,20 +44,24 @@ NSTimer *audioTimer;
     
     //*****-=-=-=-Gestures Stuff-=-=-=-*****
     UISwipeGestureRecognizer *left = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(reportLeftSwipe:)];
-    left.direction = UISwipeGestureRecognizerDirectionLeft;
+    [left setDirection:UISwipeGestureRecognizerDirectionLeft];
     [self.view addGestureRecognizer:left];
     
     UISwipeGestureRecognizer *right = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(reportRightSwipe:)];
-    right.direction = UISwipeGestureRecognizerDirectionRight;
+    [right setDirection:UISwipeGestureRecognizerDirectionRight];
     [self.view addGestureRecognizer:right];
     
     UISwipeGestureRecognizer *up = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(reportUpSwipe:)];
-    up.direction = UISwipeGestureRecognizerDirectionUp;
+    [up setDirection:UISwipeGestureRecognizerDirectionUp];
     [self.view addGestureRecognizer:up];
     
     UISwipeGestureRecognizer *down = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(reportDownSwipe:)];
-    down.direction = UISwipeGestureRecognizerDirectionDown;
+    [down setDirection:UISwipeGestureRecognizerDirectionDown];
     [self.view addGestureRecognizer:down];
+    
+    UIScreenEdgePanGestureRecognizer *queue = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(displayQueue:)];
+    [queue setEdges:UIRectEdgeLeft];
+    [self.view addGestureRecognizer:queue];
     
     [self initializeDatabase];
 }
@@ -201,7 +206,7 @@ NSTimer *audioTimer;
 
 - (IBAction)showMediaPicker:(id)sender
 {
-    MPMediaPickerController *mediaPicker = [[MPMediaPickerController alloc] initWithMediaTypes:MPMediaTypeAny];
+    MPMediaPickerController *mediaPicker = [[MPMediaPickerController alloc] initWithMediaTypes:MPMediaTypeAnyAudio];
     [mediaPicker setDelegate:self];
     [mediaPicker setShowsCloudItems:NO];
     [mediaPicker setPrompt:@"Select song to play"];
@@ -214,6 +219,7 @@ NSTimer *audioTimer;
 {
     if (mediaItemCollection) {
         [musicPlayer setQueueWithItemCollection: mediaItemCollection];
+        nowPlayingQueue = mediaItemCollection;
         [musicPlayer play];
     }
 	[self dismissViewControllerAnimated:YES completion:NO];
@@ -225,6 +231,13 @@ NSTimer *audioTimer;
 }
 
 #pragma mark - Gestures
+- (void)displayQueue:(UIGestureRecognizer *)sender {
+    QueueViewController *qvc = [[QueueViewController alloc] initWithStyle:UITableViewStylePlain];
+    [qvc setValue:nowPlayingQueue forKey:@"playQueue"];
+    qvc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    //[self presentViewController:qvc animated:YES completion:NULL];
+}
+
 - (void)handle_tap:(NSSet *)touches
 {
     if(![self displayMode])
@@ -250,7 +263,8 @@ NSTimer *audioTimer;
 
 - (void)reportLeftSwipe:(UIGestureRecognizer *)recognizer
 {
-    if(![self displayMode])
+    CGPoint location = [recognizer locationInView:self.view];
+    if(![self displayMode] && location.y > 325)
     {
         [musicPlayer skipToNextItem];
         audioTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(audioProgressUpdate) userInfo:nil repeats:YES];
@@ -259,7 +273,8 @@ NSTimer *audioTimer;
 
 - (void)reportRightSwipe:(UIGestureRecognizer *)recognizer
 {
-    if(![self displayMode])
+    CGPoint location = [recognizer locationInView:self.view];
+    if(![self displayMode] && location.y > 325)
     {
         [musicPlayer skipToPreviousItem];
         audioTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(audioProgressUpdate) userInfo:nil repeats:YES];
