@@ -63,7 +63,7 @@ NSTimer *audioTimer;
     [queue setEdges:UIRectEdgeLeft];
     [self.view addGestureRecognizer:queue];
     
-    [self initializeDatabase];
+    //[self initializeDatabase];
 }
 
 #pragma mark - Database Stuff
@@ -263,27 +263,26 @@ NSTimer *audioTimer;
 
 - (void)reportLeftSwipe:(UIGestureRecognizer *)recognizer
 {
-    CGPoint location = [recognizer locationInView:self.view];
-    if(![self displayMode] && location.y > 325)
-    {
-        [musicPlayer skipToNextItem];
-        audioTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(audioProgressUpdate) userInfo:nil repeats:YES];
-    }
-}
-
-- (void)reportRightSwipe:(UIGestureRecognizer *)recognizer
-{
-    CGPoint location = [recognizer locationInView:self.view];
-    if(![self displayMode] && location.y > 325)
+    if(![self displayMode])
     {
         [musicPlayer skipToPreviousItem];
         audioTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(audioProgressUpdate) userInfo:nil repeats:YES];
     }
 }
 
+- (void)reportRightSwipe:(UIGestureRecognizer *)recognizer
+{
+    if(![self displayMode])
+    {
+        [musicPlayer skipToNextItem];
+        audioTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(audioProgressUpdate) userInfo:nil repeats:YES];
+    }
+}
+
 - (void)reportDownSwipe:(UIGestureRecognizer *)recognizer
 {
-    if([self displayMode])
+    CGPoint location = [recognizer locationInView:self.view];
+    if([self displayMode] && location.y > 320)
     {
         [titleLabel setHidden:NO];
         [albumLabel setHidden:NO];
@@ -296,7 +295,8 @@ NSTimer *audioTimer;
 
 - (void)reportUpSwipe:(UIGestureRecognizer *)recognizer
 {
-    if(![self displayMode])
+    CGPoint location = [recognizer locationInView:self.view];
+    if(![self displayMode] && location.y > 320)
     {
         [titleLabel setHidden:YES];
         [albumLabel setHidden:YES];

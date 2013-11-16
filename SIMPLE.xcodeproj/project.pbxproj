@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		1C0E16C8183780560057E345 /* QueueViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0E16C7183780560057E345 /* QueueViewController.m */; };
-		1C26996917DB8A9F0003A32F /* MusicViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C26996817DB8A9F0003A32F /* MusicViewController.m */; };
 		1C6BB50518299ED700FEA8CE /* next.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C6BB50118299ED700FEA8CE /* next.png */; };
 		1C6BB50618299ED700FEA8CE /* pause.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C6BB50218299ED700FEA8CE /* pause.png */; };
 		1C6BB50718299ED700FEA8CE /* play.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C6BB50318299ED700FEA8CE /* play.png */; };
@@ -35,8 +34,6 @@
 /* Begin PBXFileReference section */
 		1C0E16C6183780560057E345 /* QueueViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QueueViewController.h; sourceTree = "<group>"; };
 		1C0E16C7183780560057E345 /* QueueViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QueueViewController.m; sourceTree = "<group>"; };
-		1C26996717DB8A9F0003A32F /* MusicViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MusicViewController.h; path = ../../../../Code/Xcode/SIMPLE/SIMPLE/MusicViewController.h; sourceTree = "<group>"; };
-		1C26996817DB8A9F0003A32F /* MusicViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MusicViewController.m; path = ../../../../Code/Xcode/SIMPLE/SIMPLE/MusicViewController.m; sourceTree = "<group>"; };
 		1C6BB50118299ED700FEA8CE /* next.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = next.png; sourceTree = "<group>"; };
 		1C6BB50218299ED700FEA8CE /* pause.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pause.png; sourceTree = "<group>"; };
 		1C6BB50318299ED700FEA8CE /* play.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = play.png; sourceTree = "<group>"; };
@@ -129,8 +126,6 @@
 				1CE4918C180315B70008301F /* DefaultLibraryViewController.m */,
 				1CFC763E174B92AB00ECF5A5 /* PlayerController.h */,
 				1CFC763F174B92AB00ECF5A5 /* PlayerController.m */,
-				1C26996717DB8A9F0003A32F /* MusicViewController.h */,
-				1C26996817DB8A9F0003A32F /* MusicViewController.m */,
 				1CFC7627174B92AB00ECF5A5 /* Supporting Files */,
 			);
 			name = "SIMPLE-iOS";
@@ -231,7 +226,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				1CE4918D180315B70008301F /* DefaultLibraryViewController.m in Sources */,
-				1C26996917DB8A9F0003A32F /* MusicViewController.m in Sources */,
 				1CFC762D174B92AB00ECF5A5 /* main.m in Sources */,
 				1CFC7631174B92AB00ECF5A5 /* AppDelegate.m in Sources */,
 				1CFC7640174B92AB00ECF5A5 /* PlayerController.m in Sources */,
