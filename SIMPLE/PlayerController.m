@@ -30,9 +30,11 @@ NSMutableArray *v1;
 NSMutableArray *v2;
 NSMutableArray *v3;
 BOOL newUser = YES;
+//BOOL recentlyPlayed;
 NSMutableArray *policy1;
 NSMutableArray *policy2;
 NSMutableArray *rewards;
+NSMutableArray *last20PID;
 //NSMutableArray *r1;
 //NSMutableArray *r2;
 //NSMutableArray *r3;
@@ -156,7 +158,7 @@ NSMutableArray *rewards;
         }
         //NSLog(@"%@", arr2[0]);
         NSMutableDictionary *sid = [[NSMutableDictionary alloc] init];
-        [sid setObject:[NSNumber numberWithBool:NO] forKey:@"flag"];
+        //[sid setObject:[NSNumber numberWithBool:NO] forKey:@"flag"];
         [sid setObject:v1 forKey:@"v1"];
         [sid setObject:v2 forKey:@"v2"];
         [sid setObject:v3 forKey:@"v3"];
@@ -214,6 +216,7 @@ NSMutableArray *rewards;
 - (void) handle_NowPlayingItemChanged: (id) notification
 {
    	MPMediaItem *currentItem = [musicPlayer nowPlayingItem];
+    
     //[playPosition setValue:[musicPlayer currentPlaybackTime]];
     [playPosition setProgress:([musicPlayer currentPlaybackTime] / [[currentItem valueForProperty:MPMediaItemPropertyPlaybackDuration] doubleValue])];
 	UIImage *artworkImage = [UIImage imageNamed:@"noArtworkImage.png"];
@@ -377,7 +380,7 @@ NSMutableArray *rewards;
         MPMediaItem *current = [musicPlayer nowPlayingItem];
         [musicPlayer skipToPreviousItem];
         audioTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(audioProgressUpdate) userInfo:nil repeats:YES];
-        NSLog(@"calling compute");
+        //NSLog(@"calling compute");
         [self compute:time forSong:current];
         numSongsHeard++;
     } else {
@@ -385,9 +388,18 @@ NSMutableArray *rewards;
         MPMediaItem *current = [musicPlayer nowPlayingItem];
         [musicPlayer skipToBeginning];
         audioTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(audioProgressUpdate) userInfo:nil repeats:YES];
-        NSLog(@"calling compute");
+        //NSLog(@"calling compute");
         [self compute:time forSong:current];
         numSongsHeard++;
+        [last20PID addObject:[current valueForProperty:MPMediaItemPropertyPersistentID]];
+        if([last20PID count] == 20)
+            [last20PID removeObjectAtIndex:0];
+        /*BOOL temp = YES;
+        NSDictionary *flagChange = [songs objectForKey:[current valueForProperty:MPMediaItemPropertyPersistentID]];
+        NSLog(@"%@", flagChange);
+        [flagChange setValue:[NSNumber numberWithBool:temp] forKey:@"flag"];
+        [songs setValue:flagChange forKey:[current valueForProperty:MPMediaItemPropertyPersistentID]];
+        NSLog(@"%@", [[songs objectForKey:[current valueForProperty:MPMediaItemPropertyPersistentID]] objectForKey:@"flag"]);*/
     }
     //[self compute];
 }
@@ -434,6 +446,16 @@ NSMutableArray *rewards;
     NSLog(@"calling compute");
     [self compute:time forSong:current];
     numSongsHeard++;
+    //[[[songs objectForKey:[current valueForProperty:MPMediaItemPropertyPersistentID]] objectForKey:@"flag"] boolValue];
+    /*BOOL temp = YES;
+    NSDictionary *flagChange = [songs objectForKey:[current valueForProperty:MPMediaItemPropertyPersistentID]];
+    NSLog(@"%@", flagChange);
+    [flagChange setValue:[NSNumber numberWithBool:temp] forKey:@"flag"];
+    [songs setValue:flagChange forKey:[current valueForProperty:MPMediaItemPropertyPersistentID]];
+    NSLog(@"%@", [[songs objectForKey:[current valueForProperty:MPMediaItemPropertyPersistentID]] objectForKey:@"flag"]);*/
+    [last20PID addObject:[current valueForProperty:MPMediaItemPropertyPersistentID]];
+    if([last20PID count] == 20)
+        [last20PID removeObjectAtIndex:0];
 }
 
 - (void)audioProgressUpdate
@@ -457,7 +479,7 @@ NSMutableArray *rewards;
 #pragma mark - SIMPLE Algo
 - (void) compute:(NSTimeInterval)time forSong:(MPMediaItem *)prev
 {
-    NSLog(@"reached compute1");
+    //NSLog(@"reached compute1");
     float listened = time;
     float prevTrackLength = [[prev valueForProperty:MPMediaItemPropertyPlaybackDuration] floatValue];
     float prevPercent = (listened*100)/prevTrackLength;
@@ -489,10 +511,10 @@ NSMutableArray *rewards;
 
 - (void) compute2:(float)percent forSong:(MPMediaItem *)prev
 {
-    NSLog(@"reached compute2");
+    //NSLog(@"reached compute2");
     if(step)
     {
-        NSLog(@"entered compute2 calculations");
+        //NSLog(@"entered compute2 calculations");
         if(tBackPercent < 50.0)
         {
             [self updateV:1 forSong:prev withTime:percent];
@@ -506,7 +528,7 @@ NSMutableArray *rewards;
 
 - (void) updateV:(int)which forSong:(MPMediaItem *)prev withTime:(float)percent
 {
-    NSLog(@"reached updateV");
+    //NSLog(@"reached updateV");
     int updateIndex = [[idx objectForKey:[twoBack valueForProperty:MPMediaItemPropertyPersistentID]] integerValue];
     NSArray *keys = [songs allKeys];
     id aKey = [keys objectAtIndex:updateIndex];
@@ -529,8 +551,8 @@ NSMutableArray *rewards;
             [temp replaceObjectAtIndex:prevIndex withObject:[NSNumber numberWithFloat:t]];
         }
         [[songs objectForKey:aKey] setValue:temp forKey:@"v1"];
-        NSLog(@"%f", t);
-        NSLog(@"v1:\n%@", temp);
+        //NSLog(@"%f", t);
+        //NSLog(@"v1:\n%@", temp);
     } else if(which == 2)
     {
         NSMutableArray *temp = [[songs objectForKey:aKey] objectForKey:@"v2"];
@@ -548,8 +570,8 @@ NSMutableArray *rewards;
             [temp replaceObjectAtIndex:prevIndex withObject:[NSNumber numberWithFloat:t]];
         }
         [[songs objectForKey:aKey] setValue:temp forKey:@"v2"];
-        NSLog(@"%f", t);
-        NSLog(@"v2:\n%@", temp);
+        //NSLog(@"%f", t);
+        //NSLog(@"v2:\n%@", temp);
     } else if(which == 3)
     {
         NSMutableArray *temp = [[songs objectForKey:aKey] objectForKey:@"v3"];
@@ -567,8 +589,8 @@ NSMutableArray *rewards;
             [temp replaceObjectAtIndex:prevIndex withObject:[NSNumber numberWithFloat:t]];
         }
         [[songs objectForKey:aKey] setValue:temp forKey:@"v3"];
-        NSLog(@"%f", t);
-        NSLog(@"v3:\n%@", temp);
+        //NSLog(@"%f", t);
+        //NSLog(@"v3:\n%@", temp);
     }
     
     NSString *databasePath = [[self getFilePath] stringByAppendingPathComponent:@"data.plist"];
@@ -580,7 +602,7 @@ NSMutableArray *rewards;
 - (void) predict:(MPMediaItem *)current heard:(float)percentHeard
 {
     //int index = [[idx objectForKey:[current valueForProperty:MPMediaItemPropertyPersistentID]] integerValue];
-    NSLog(@"Predicting");
+    //NSLog(@"Predicting");
     MPMediaQuery *query = [MPMediaQuery songsQuery]; //filter songs...remove videos and shit
     int n = [[query items] count];
     float sumReward = 0.00;
@@ -620,7 +642,7 @@ NSMutableArray *rewards;
             //sumV += [[[[songs objectForKey:aKey] objectForKey:@"v1"] objectAtIndex:i] floatValue];
             //[temp addObject:[NSNumber numberWithFloat:[[[[songs objectForKey:aKey] objectForKey:@"v1"] objectAtIndex:i] floatValue]]];
             tempV[i] = [[[[songs objectForKey:aKey] objectForKey:@"v1"] objectAtIndex:i] floatValue];
-            NSLog(@"normalizing v1\n%f", tempV[i]);
+            //NSLog(@"normalizing v1\n%f", tempV[i]);
             sumV += tempV[i];
         }
         
@@ -639,7 +661,7 @@ NSMutableArray *rewards;
             aKey = [keys objectAtIndex:i];
             //[temp addObject:[NSNumber numberWithFloat:[[[[songs objectForKey:aKey] objectForKey:@"v1"] objectAtIndex:i] floatValue]]];
             tempV[i] = [[[[songs objectForKey:aKey] objectForKey:@"v2"] objectAtIndex:i] floatValue];
-            NSLog(@"normalizing v2\n%f", tempV[i]);
+            //NSLog(@"normalizing v2\n%f", tempV[i]);
             sumV += tempV[i];
         }
         
@@ -657,7 +679,7 @@ NSMutableArray *rewards;
             aKey = [keys objectAtIndex:i];
             //[temp addObject:[NSNumber numberWithFloat:[[[[songs objectForKey:aKey] objectForKey:@"v1"] objectAtIndex:i] floatValue]]];
             tempV[i] = [[[[songs objectForKey:aKey] objectForKey:@"v3"] objectAtIndex:i] floatValue];
-            NSLog(@"normalizing v3\n%f", tempV[i]);
+            //NSLog(@"normalizing v3\n%f", tempV[i]);
             sumV += tempV[i];
         }
         
@@ -697,11 +719,16 @@ NSMutableArray *rewards;
     int maxIndex = 0;
     for(int i = 0; i < n; i++)
     {
+        aKey = [keys objectAtIndex:i];
+        //recentlyPlayed = [[[songs objectForKey:aKey] objectForKey:@"flag"] boolValue];
         q[i] = (p1[i]*0.6)+(0.4*p2[i]);
-        if(q[i] > max)
+        if(![last20PID containsObject:[idx objectForKey:[NSNumber numberWithInt:i]]])
         {
-            max = q[i];
-            maxIndex = i;
+            if(q[i] > max)
+            {
+                max = q[i];
+                maxIndex = i;
+            }
         }
     }
     NSArray *allKeysForMax = [idx allKeysForObject:[NSNumber numberWithInt:maxIndex]];

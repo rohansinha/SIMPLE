@@ -15,6 +15,8 @@
 		1C6BB50D1829A0F000FEA8CE /* ReflectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C6BB50C1829A0F000FEA8CE /* ReflectionView.m */; };
 		1C7244A217B2A71700A60BF1 /* Appicon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C7244A117B2A71700A60BF1 /* Appicon.png */; };
 		1C84CA051802FC7E00823F36 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C84CA031802FC7E00823F36 /* libsqlite3.dylib */; };
+		1CA89B2B18A60A0900FB06B8 /* ad_here.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1CA89B2A18A60A0900FB06B8 /* ad_here.jpg */; };
+		1CA89B2E18A6149C00FB06B8 /* LoadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CA89B2D18A6149C00FB06B8 /* LoadViewController.m */; };
 		1CE248F018A54CAC004C98CD /* songs.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1CE248EF18A54CAC004C98CD /* songs.plist */; };
 		1CFC7621174B92AB00ECF5A5 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CFC7620174B92AB00ECF5A5 /* UIKit.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		1CFC7623174B92AB00ECF5A5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CFC7622174B92AB00ECF5A5 /* Foundation.framework */; };
@@ -44,6 +46,9 @@
 		1C7244A317B2A7A400A60BF1 /* SIMPLE-iPhone.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "SIMPLE-iPhone.jpg"; sourceTree = "<group>"; };
 		1C84CA021802FC7E00823F36 /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
 		1C84CA031802FC7E00823F36 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
+		1CA89B2A18A60A0900FB06B8 /* ad_here.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = ad_here.jpg; path = ../../../../../Downloads/ad_here.jpg; sourceTree = "<group>"; };
+		1CA89B2C18A6149C00FB06B8 /* LoadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadViewController.h; sourceTree = "<group>"; };
+		1CA89B2D18A6149C00FB06B8 /* LoadViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadViewController.m; sourceTree = "<group>"; };
 		1CE248EF18A54CAC004C98CD /* songs.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = songs.plist; sourceTree = "<group>"; };
 		1CFC761D174B92AB00ECF5A5 /* SIMPLE.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SIMPLE.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1CFC7620174B92AB00ECF5A5 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -119,6 +124,8 @@
 				1CFC762F174B92AB00ECF5A5 /* AppDelegate.h */,
 				1CFC7630174B92AB00ECF5A5 /* AppDelegate.m */,
 				1CFC7638174B92AB00ECF5A5 /* MainStoryboard.storyboard */,
+				1CA89B2C18A6149C00FB06B8 /* LoadViewController.h */,
+				1CA89B2D18A6149C00FB06B8 /* LoadViewController.m */,
 				1C0E16C6183780560057E345 /* QueueViewController.h */,
 				1C0E16C7183780560057E345 /* QueueViewController.m */,
 				1CFC763E174B92AB00ECF5A5 /* PlayerController.h */,
@@ -132,6 +139,7 @@
 		1CFC7627174B92AB00ECF5A5 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				1CA89B2A18A60A0900FB06B8 /* ad_here.jpg */,
 				1CE248EF18A54CAC004C98CD /* songs.plist */,
 				1C6BB50118299ED700FEA8CE /* next.png */,
 				1C6BB50218299ED700FEA8CE /* pause.png */,
@@ -219,6 +227,7 @@
 				1C6BB50718299ED700FEA8CE /* play.png in Resources */,
 				1CFC7685174B940E00ECF5A5 /* noArtworkImage.png in Resources */,
 				1C6BB50518299ED700FEA8CE /* next.png in Resources */,
+				1CA89B2B18A60A0900FB06B8 /* ad_here.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -233,6 +242,7 @@
 				1CFC7631174B92AB00ECF5A5 /* AppDelegate.m in Sources */,
 				1CFC7640174B92AB00ECF5A5 /* PlayerController.m in Sources */,
 				1C6BB50D1829A0F000FEA8CE /* ReflectionView.m in Sources */,
+				1CA89B2E18A6149C00FB06B8 /* LoadViewController.m in Sources */,
 				1C0E16C8183780560057E345 /* QueueViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
