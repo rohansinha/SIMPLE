@@ -8,6 +8,7 @@
 
 #import "ReflectionView.h"
 #import "PlayerController.h"
+#import<math.h>
 //#import "QueueViewController.h"
 //#import <sqlite3.h>
 
@@ -28,6 +29,10 @@ NSMutableDictionary *idx;
 NSMutableArray *v1;
 NSMutableArray *v2;
 NSMutableArray *v3;
+BOOL newUser = YES;
+NSMutableArray *policy1;
+NSMutableArray *policy2;
+NSMutableArray *rewards;
 //NSMutableArray *r1;
 //NSMutableArray *r2;
 //NSMutableArray *r3;
@@ -49,6 +54,7 @@ NSMutableArray *v3;
     musicPlayer = [MPMusicPlayerController applicationMusicPlayer];
     
 	[playPauseButton setImage:[UIImage imageNamed:@"play.png"] forState:normal];
+    if(
     [self.reflectionView updateReflection];
     
     [self registerMediaPlayerNotifications];
@@ -88,11 +94,27 @@ NSMutableArray *v3;
 
 - (void)initializeData
 {
-    //NSString *savePath = [[self getFilePath] stringByAppendingPathComponent:@"data.plist"];
+    NSString *rwd = [[self getFilePath] stringByAppendingPathComponent:@"rewards.plist"];
     NSString *filePath = [[self getFilePath] stringByAppendingPathComponent:@"data.plist"];
-    if ([[NSFileManager defaultManager] fileExistsAtPath:filePath])
+    NSString *mapper = [[self getFilePath] stringByAppendingPathComponent:@"mapper.plist"];
+    NSString *pol1 = [[self getFilePath] stringByAppendingPathComponent:@"policy1.plist"];
+    NSString *pol2 = [[self getFilePath] stringByAppendingPathComponent:@"policy2.plist"];
+    
+    if ([[NSFileManager defaultManager] fileExistsAtPath:rwd])
     {
         songs = [[NSMutableDictionary alloc] initWithContentsOfFile:filePath];
+        idx = [[NSMutableDictionary alloc] initWithContentsOfFile:mapper];
+        policy1 = [[NSMutableArray alloc] initWithContentsOfFile:pol1];
+        policy2 = [[NSMutableArray alloc] initWithContentsOfFile:pol2];
+        rewards = [[NSMutableArray alloc] initWithContentsOfFile:rwd];
+        newUser = NO;
+        for(int i = 0; i < [rewards count]; i++)
+        {
+            NSMutableArray *tempRwd = [rewards objectAtIndex:i];
+            for(int j = 0; j < [rewards count]; j++)
+                rewardMatrix[i][j] = [[tempRwd objectAtIndex:j] floatValue];
+        }
+        
     } else {
         //set up stuff...this is first run
         MPMediaQuery *query = [MPMediaQuery songsQuery]; //filter songs...remove videos and shit
@@ -159,6 +181,7 @@ NSMutableArray *v3;
         }
         //NSLog(@"%@", [[songs objectForKey:@"8769369858748389327"] objectForKey:@"v1"]);
         [songs writeToFile:filePath atomically:YES];
+        [idx writeToFile:mapper atomically:YES];
     }
 }
 
@@ -348,11 +371,21 @@ NSMutableArray *v3;
 - (IBAction)prevSong:(id)sender
 {
     if([musicPlayer currentPlaybackTime] < 5.0) {
+        NSTimeInterval time = [musicPlayer currentPlaybackTime];
+        MPMediaItem *current = [musicPlayer nowPlayingItem];
         [musicPlayer skipToPreviousItem];
         audioTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(audioProgressUpdate) userInfo:nil repeats:YES];
+        NSLog(@"calling compute");
+        [self compute:time forSong:current];
+        numSongsHeard++;
     } else {
+        NSTimeInterval time = [musicPlayer currentPlaybackTime];
+        MPMediaItem *current = [musicPlayer nowPlayingItem];
         [musicPlayer skipToBeginning];
         audioTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(audioProgressUpdate) userInfo:nil repeats:YES];
+        NSLog(@"calling compute");
+        [self compute:time forSong:current];
+        numSongsHeard++;
     }
     //[self compute];
 }
@@ -495,6 +528,7 @@ NSMutableArray *v3;
         }
         [[songs objectForKey:aKey] setValue:temp forKey:@"v1"];
         NSLog(@"%f", t);
+        NSLog(@"v1:\n%@", temp);
     } else if(which == 2)
     {
         NSMutableArray *temp = [[songs objectForKey:aKey] objectForKey:@"v2"];
@@ -512,6 +546,8 @@ NSMutableArray *v3;
             [temp replaceObjectAtIndex:prevIndex withObject:[NSNumber numberWithFloat:t]];
         }
         [[songs objectForKey:aKey] setValue:temp forKey:@"v2"];
+        NSLog(@"%f", t);
+        NSLog(@"v2:\n%@", temp);
     } else if(which == 3)
     {
         NSMutableArray *temp = [[songs objectForKey:aKey] objectForKey:@"v3"];
@@ -529,37 +565,48 @@ NSMutableArray *v3;
             [temp replaceObjectAtIndex:prevIndex withObject:[NSNumber numberWithFloat:t]];
         }
         [[songs objectForKey:aKey] setValue:temp forKey:@"v3"];
+        NSLog(@"%f", t);
+        NSLog(@"v3:\n%@", temp);
     }
     
-    NSString *filePath = [[self getFilePath] stringByAppendingPathComponent:@"data.plist"];
-    [songs writeToFile:filePath atomically:YES];
+    NSString *databasePath = [[self getFilePath] stringByAppendingPathComponent:@"data.plist"];
+    [songs writeToFile:databasePath atomically:YES];
     if(numSongsHeard > 5)
         [self predict:prev heard:percent];
 }
 
 - (void) predict:(MPMediaItem *)current heard:(float)percentHeard
 {
-    int index = [[idx objectForKey:[current valueForProperty:MPMediaItemPropertyPersistentID]] integerValue];
-    float sumReward = 0.00;
-    float sumV = 0.00;
+    //int index = [[idx objectForKey:[current valueForProperty:MPMediaItemPropertyPersistentID]] integerValue];
+    NSLog(@"Predicting");
     MPMediaQuery *query = [MPMediaQuery songsQuery]; //filter songs...remove videos and shit
     int n = [[query items] count];
+    float sumReward = 0.00;
+    float sumColoumn[n];
+    float sumV = 0.00;
     id aKey;
     float tempV[n];
     NSArray *keys = [songs allKeys];
-    
     //Notmalizng reward matrix
     for(int i = 0; i < n; i++)
     {
-        sumReward += rewardMatrix[i][index];
+        sumColoumn[i] = 0;
+        for(int j = 0; j < n; j++)
+        {
+            sumReward += rewardMatrix[i][j];
+            sumColoumn[i] += rewardMatrix[j][i];
+        }
     }
+    sumReward = sqrtf(sumReward);
     if(sumReward > 0)
     {
         for(int i = 0; i < n; i++)
         {
-            normalizedReward[i] = (float)(rewardMatrix[index][i]/sumReward);
+            normalizedReward[i] = sumColoumn[i]/(float)sumReward;
         }
     }
+    float p1[n];
+    float p2[n];
     
     //Normalizing Vi
     if(percentHeard < 50.0)
@@ -571,6 +618,7 @@ NSMutableArray *v3;
             //sumV += [[[[songs objectForKey:aKey] objectForKey:@"v1"] objectAtIndex:i] floatValue];
             //[temp addObject:[NSNumber numberWithFloat:[[[[songs objectForKey:aKey] objectForKey:@"v1"] objectAtIndex:i] floatValue]]];
             tempV[i] = [[[[songs objectForKey:aKey] objectForKey:@"v1"] objectAtIndex:i] floatValue];
+            NSLog(@"normalizing v1\n%f", tempV[i]);
             sumV += tempV[i];
         }
         
@@ -578,9 +626,8 @@ NSMutableArray *v3;
         {
             for(int i = 0; i < n; i++)
             {
-                tempV[i] = tempV[i]/sumV;
+                tempV[i] = tempV[i]/sqrtf(sumV);
             }
-            //[temp addObject:<#(id)#>
         }
     } else if(percentHeard >= 50.0 && percentHeard < 80.0)
     {
@@ -590,6 +637,7 @@ NSMutableArray *v3;
             aKey = [keys objectAtIndex:i];
             //[temp addObject:[NSNumber numberWithFloat:[[[[songs objectForKey:aKey] objectForKey:@"v1"] objectAtIndex:i] floatValue]]];
             tempV[i] = [[[[songs objectForKey:aKey] objectForKey:@"v2"] objectAtIndex:i] floatValue];
+            NSLog(@"normalizing v2\n%f", tempV[i]);
             sumV += tempV[i];
         }
         
@@ -597,9 +645,8 @@ NSMutableArray *v3;
         {
             for(int i = 0; i < n; i++)
             {
-                tempV[i] = tempV[i]/sumV;
+                tempV[i] = tempV[i]/sqrtf(sumV);
             }
-            //[temp addObject:<#(id)#>
         }
     } else {
         //r3
@@ -608,6 +655,7 @@ NSMutableArray *v3;
             aKey = [keys objectAtIndex:i];
             //[temp addObject:[NSNumber numberWithFloat:[[[[songs objectForKey:aKey] objectForKey:@"v1"] objectAtIndex:i] floatValue]]];
             tempV[i] = [[[[songs objectForKey:aKey] objectForKey:@"v3"] objectAtIndex:i] floatValue];
+            NSLog(@"normalizing v3\n%f", tempV[i]);
             sumV += tempV[i];
         }
         
@@ -615,20 +663,39 @@ NSMutableArray *v3;
         {
             for(int i = 0; i < n; i++)
             {
-                tempV[i] = tempV[i]/sumV;
+                tempV[i] = tempV[i]/sqrtf(sumV);
             }
-            //[temp addObject:<#(id)#>
         }
     }
-    NSString *filePath = [[self getFilePath] stringByAppendingPathComponent:@"data.plist"];
-    [songs writeToFile:filePath atomically:YES];
+    if(newUser)
+    {
+        for(int i = 0; i < n; i++)
+        {
+            p1[i] = (float)(1/n);
+            p2[i] = (float)(1/n);
+        }
+        newUser = NO;
+    } else {
+        for(int i = 0; i < n; i++)
+        {
+            p1[i] = [[policy1 objectAtIndex:i] floatValue];
+            p2[i] = [[policy2 objectAtIndex:i] floatValue];
+        }
+        for(int i = 0; i < n; i++)
+        {
+            p1[i] += (0.85*(normalizedReward[i]-(0.85*p1[i])));
+            p2[i] += (0.85*(tempV[i]-(0.85*p2[i])));
+        }
+    }
+    NSString *databasePath = [[self getFilePath] stringByAppendingPathComponent:@"data.plist"];
+    [songs writeToFile:databasePath atomically:YES];
     //Prediction--Queue Gen
     float q[n];
     float max = 0;
     int maxIndex = 0;
     for(int i = 0; i < n; i++)
     {
-        q[i] = (normalizedReward[i]*0.6)+(0.4*tempV[i]);
+        q[i] = (p1[i]*0.6)+(0.4*p2[i]);
         if(q[i] > max)
         {
             max = q[i];
@@ -645,6 +712,27 @@ NSMutableArray *v3;
     [self setNowPlayingQueue:[MPMediaItemCollection collectionWithItems:(NSArray *) queue]];
     [musicPlayer setQueueWithItemCollection:nowPlayingQueue];
     [musicPlayer play];
+    NSString *pol1 = [[self getFilePath] stringByAppendingPathComponent:@"policy1.plist"];
+    NSString *pol2 = [[self getFilePath] stringByAppendingPathComponent:@"policy2.plist"];
+    NSString *rwd = [[self getFilePath] stringByAppendingPathComponent:@"rewards.plist"];
+    for(int i = 0; i < n; i++)
+    {
+        NSMutableArray *tempReward = [[NSMutableArray alloc] init];
+        [policy1 addObject:[NSNumber numberWithFloat:p1[i]]];
+        [policy2 addObject:[NSNumber numberWithFloat:p2[i]]];
+        for(int j = 0; j < n; j++)
+        {
+            [tempReward addObject:[NSNumber numberWithFloat:rewardMatrix[i][j]]];
+        }
+        [rewards addObject:tempReward];
+    }
+    [policy1 writeToFile:pol1 atomically:YES];
+    [policy2 writeToFile:pol2 atomically:YES];
+    [rewards writeToFile:rwd atomically:YES];
+    //destroy policy1, policy2, rewards
+    [policy1 removeAllObjects];
+    [policy2 removeAllObjects];
+    [rewards removeAllObjects];
 }
 
 @end
