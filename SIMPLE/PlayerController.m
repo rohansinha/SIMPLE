@@ -54,7 +54,9 @@ NSMutableArray *rewards;
     musicPlayer = [MPMusicPlayerController applicationMusicPlayer];
     
 	[playPauseButton setImage:[UIImage imageNamed:@"play.png"] forState:normal];
-    if(
+    if([musicPlayer playbackState] == MPMusicPlaybackStateStopped || [musicPlayer playbackState] == MPMusicPlaybackStatePaused)
+        [playPauseButton setImage:[UIImage imageNamed:@"play.png"] forState:normal];
+    else [playPauseButton setImage:[UIImage imageNamed:@"pause.png"] forState:normal];
     [self.reflectionView updateReflection];
     
     [self registerMediaPlayerNotifications];
