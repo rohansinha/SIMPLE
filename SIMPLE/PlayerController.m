@@ -8,35 +8,47 @@
 
 #import "ReflectionView.h"
 #import "PlayerController.h"
-#import "QueueViewController.h"
-#import <sqlite3.h>
+//#import "QueueViewController.h"
+//#import <sqlite3.h>
 
 @implementation PlayerController
 @synthesize musicPlayer, nowPlayingQueue, reflectionView = _reflectionView;
 
 NSTimer *audioTimer;
+float alpha = 0.99;
+float gama = 0.85;
+BOOL step = NO;  //for num songs (3 queue)
+MPMediaItem *twoBack;
+float tBackPercent;
+int numSongsHeard = 0;
+int rewardMatrix[1000][1000];
+int normalizedReward[1000];
+NSMutableDictionary *songs;
+NSMutableDictionary *idx;
+NSMutableArray *v1;
+NSMutableArray *v2;
+NSMutableArray *v3;
+NSMutableArray *r1;
+NSMutableArray *r2;
+NSMutableArray *r3;
 
 #pragma mark - Intial Load
-
+/*
 - (NSString *)dataFilePath
 {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
     return [documentsDirectory stringByAppendingPathComponent:@"simple_data.sqlite"];
-}
+}*/
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     [[UIApplication sharedApplication] setStatusBarHidden:YES];
-    musicPlayer = [MPMusicPlayerController iPodMusicPlayer];
-	if ([musicPlayer playbackState] == MPMusicPlaybackStatePlaying){
-        [playPauseButton setImage:[UIImage imageNamed:@"pause.png"] forState:normal];
-        //[playPosition setProgress:[musicPlayer currentPlaybackTime]];
-        audioTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(audioProgressUpdate) userInfo:nil repeats:YES];
-    }
-    else [playPauseButton setImage:[UIImage imageNamed:@"play.png"] forState:normal];
+    musicPlayer = [MPMusicPlayerController applicationMusicPlayer];
+    
+	[playPauseButton setImage:[UIImage imageNamed:@"play.png"] forState:normal];
     [self.reflectionView updateReflection];
     
     [self registerMediaPlayerNotifications];
@@ -63,71 +75,91 @@ NSTimer *audioTimer;
     [queue setEdges:UIRectEdgeLeft];
     [self.view addGestureRecognizer:queue];
     
-    //[self initializeDatabase];
+    [self initializeData];
 }
 
 #pragma mark - Database Stuff
-- (void)initializeDatabase
+- (NSString *) getFilePath
 {
-    sqlite3 *database;
-    if (sqlite3_open([[self dataFilePath] UTF8String], &database) != SQLITE_OK) {
-        sqlite3_close(database);
-        NSAssert(0, @"Failed to open database");
-    }
-    NSString *createSQL = @"CREATE TABLE IF NOT EXISTS FIELDS "
-    "(ROW INTEGER PRIMARY KEY, FIELD_DATA TEXT);";
-    char *errorMsg;
-    if (sqlite3_exec (database, [createSQL UTF8String], NULL, NULL, &errorMsg) != SQLITE_OK) {
-        sqlite3_close(database);
-        NSAssert(0, @"Error creating table: %s", errorMsg);
-    }
-    NSString *query = @"SELECT ROW, FIELD_DATA FROM FIELDS ORDER BY ROW";
-    sqlite3_stmt *statement;
-    if (sqlite3_prepare_v2(database, [query UTF8String], -1, &statement, nil) == SQLITE_OK)
-    {
-        while (sqlite3_step(statement) == SQLITE_ROW) {
-            //int row = sqlite3_column_int(statement, 0);
-            //char *rowData = (char *)sqlite3_column_text(statement, 1);
-            //NSString *fieldValue = [[NSString alloc] initWithString:rowData];
-            //UITextField *field = self.lineFields[row];
-            //field.text = fieldValue;
-        }
-        sqlite3_finalize(statement);
-    }
-    sqlite3_close(database);
-    UIApplication *app = [UIApplication sharedApplication];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(applicationWillResignActive:)
-                                                 name:UIApplicationWillResignActiveNotification
-                                               object:app];
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = paths[0];
+    return documentsDirectory;
 }
 
-- (void)applicationWillResignActive:(NSNotification *)notification
+- (void)initializeData
 {
-    sqlite3 *database;
-    if (sqlite3_open([[self dataFilePath] UTF8String], &database)!= SQLITE_OK) {
-        sqlite3_close(database);
-        NSAssert(0, @"Failed to open database");
-    }
-    for (int i = 0; i < 4; i++)
+    //NSString *savePath = [[self getFilePath] stringByAppendingPathComponent:@"data.plist"];
+    NSString *filePath = [[self getFilePath] stringByAppendingPathComponent:@"data.plist"];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:filePath])
     {
-        // UITextField *field = self.lineFields[i];
-        // Once again, inline string concatenation to the rescue:
-        char *update = "INSERT OR REPLACE INTO FIELDS (ROW, FIELD_DATA) "
-        "VALUES (?, ?);";
-        char *errorMsg = NULL;
-        sqlite3_stmt *stmt;
-        if (sqlite3_prepare_v2(database, update, -1, &stmt, nil) == SQLITE_OK)
+        songs = [[NSMutableDictionary alloc] initWithContentsOfFile:filePath];
+    } else {
+        //set up stuff...this is first run
+        MPMediaQuery *query = [MPMediaQuery songsQuery]; //filter songs...remove videos and shit
+        int n = [[query items] count];
+        //NSLog(@"%d", n);
+        
+        //Building reward matrix
+        for(int i = 0; i < n; i++)
         {
-            sqlite3_bind_int(stmt, 1, i);
-        //  sqlite3_bind_text(stmt, 2, [field.text UTF8String], -1, NULL);
+            for(int j = 0; j < n; j++)
+            {
+                rewardMatrix[i][j] = 0;
+            }
         }
-        if (sqlite3_step(stmt) != SQLITE_DONE)
-            NSAssert(0, @"Error updating table: %s", errorMsg);
-        sqlite3_finalize(stmt);
+        idx = [[NSMutableDictionary alloc] init];
+        r1 = [[NSMutableArray alloc] init];
+        r2 = [[NSMutableArray alloc] init];
+        r3 = [[NSMutableArray alloc] init];
+        v1 = [[NSMutableArray alloc] init];
+        v2 = [[NSMutableArray alloc] init];
+        v3 = [[NSMutableArray alloc] init];
+        //Initializing songs
+        NSArray *fullList = [query items];
+        songs = [[NSMutableDictionary alloc] init];
+        NSNumber *zero = [NSNumber numberWithInt:0];
+        float a = (1/(float)n); //float contributed by nirvik
+        //NSLog(@"%f", a);
+        NSNumber *calc = [NSNumber numberWithFloat:a];
+        for(int i = 0; i < 1000; i++)
+        {
+            [r1 addObject:zero];
+            [r2 addObject:zero];
+            [r3 addObject:zero];
+            [v1 addObject:calc];
+            [v2 addObject:calc];
+            [v3 addObject:calc];
+        }
+        //NSLog(@"%@", arr2[0]);
+        NSMutableDictionary *sid = [[NSMutableDictionary alloc] init];
+        [sid setObject:[NSNumber numberWithBool:NO] forKey:@"flag"];
+        [sid setObject:v1 forKey:@"v1"];
+        [sid setObject:v2 forKey:@"v2"];
+        [sid setObject:v3 forKey:@"v3"];
+        [sid setObject:r1 forKey:@"r1"];
+        [sid setObject:r2 forKey:@"r2"];
+        [sid setObject:r3 forKey:@"r3"];
+        for(int i = 0; i < n; i++)
+        {
+            //[sid setObject:[[fullList objectAtIndex:i] valueForProperty:MPMediaItemPropertyTitle]  forKey:@"name"];
+            [songs setObject:sid forKey:[[fullList objectAtIndex:i] valueForProperty:MPMediaItemPropertyPersistentID]];
+            //[songs setObject:sid forKey:[NSNumber numberWithInt:i]];
+            //NSLog(@"%@", sid);
+            //NSLog(@"%@", [[fullList objectAtIndex:i] valueForProperty:MPMediaItemPropertyPersistentID]);
+        }
+        //NSDictionary *temp = songs[@"8769369858748389178"];
+        
+        NSArray *test = [songs allKeys];
+        for(int i = 0; i < n; i++)
+        {
+            id aKey = [test objectAtIndex:i];
+            //id anObject = [songs objectForKey:aKey];
+            [idx setValue:[NSNumber numberWithInt:i] forKey:aKey];
+            //NSLog(@"%@", anObject);
+        }
+        //NSLog(@"%@", [[songs objectForKey:@"8769369858748389327"] objectForKey:@"v1"]);
+        [songs writeToFile:filePath atomically:YES];
     }
-    sqlite3_close(database);
-    
 }
 
 - (void)didReceiveMemoryWarning
@@ -219,6 +251,7 @@ NSTimer *audioTimer;
 {
     if (mediaItemCollection) {
         [musicPlayer setQueueWithItemCollection: mediaItemCollection];
+        
         nowPlayingQueue = mediaItemCollection;
         [musicPlayer play];
     }
@@ -231,12 +264,6 @@ NSTimer *audioTimer;
 }
 
 #pragma mark - Gestures
-- (void)displayQueue:(UIGestureRecognizer *)sender {
-    QueueViewController *qvc = [[QueueViewController alloc] initWithStyle:UITableViewStylePlain];
-    [qvc setValue:nowPlayingQueue forKey:@"playQueue"];
-    qvc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    //[self presentViewController:qvc animated:YES completion:NULL];
-}
 
 - (void)handle_tap:(NSSet *)touches
 {
@@ -316,7 +343,6 @@ NSTimer *audioTimer;
 }
 
 #pragma mark - Controls
-
 - (IBAction)prevSong:(id)sender
 {
     if([musicPlayer currentPlaybackTime] < 5.0) {
@@ -326,6 +352,7 @@ NSTimer *audioTimer;
         [musicPlayer skipToBeginning];
         audioTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(audioProgressUpdate) userInfo:nil repeats:YES];
     }
+    //[self compute];
 }
 
 - (IBAction)playPause:(id)sender
@@ -339,10 +366,37 @@ NSTimer *audioTimer;
     }
 }
 
+- (IBAction)testQueue:(id)sender
+{
+    MPMediaItem *current = [musicPlayer nowPlayingItem];
+    NSTimeInterval playTime = [musicPlayer currentPlaybackTime];
+    BOOL wasPlaying = FALSE;
+    if([musicPlayer playbackState] == MPMusicPlaybackStatePlaying)
+        wasPlaying = TRUE;
+    NSMutableArray *newQueue = [[nowPlayingQueue items] mutableCopy];
+    MPMediaPropertyPredicate *artistNamePredicate = [MPMediaPropertyPredicate predicateWithValue: @"Adele" forProperty: MPMediaItemPropertyArtist];
+    MPMediaQuery *sample = [[MPMediaQuery alloc] init];
+    [sample addFilterPredicate: artistNamePredicate];
+    NSArray *newItems = [sample items];
+    [newQueue addObjectsFromArray:newItems];
+    [self setNowPlayingQueue:[MPMediaItemCollection collectionWithItems:(NSArray *) newQueue]];
+    [musicPlayer setQueueWithItemCollection:nowPlayingQueue];
+    [musicPlayer setNowPlayingItem:current];
+    [musicPlayer setCurrentPlaybackTime:playTime];
+    
+    if(wasPlaying)
+        [musicPlayer play];
+}
+
 - (IBAction)nextSong:(id)sender
 {
+    NSTimeInterval time = [musicPlayer currentPlaybackTime];
+    MPMediaItem *current = [musicPlayer nowPlayingItem];
     [musicPlayer skipToNextItem];
     audioTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(audioProgressUpdate) userInfo:nil repeats:YES];
+    NSLog(@"calling compute");
+    [self compute:time forSong:current];
+    numSongsHeard++;
 }
 
 - (void)audioProgressUpdate
@@ -360,6 +414,122 @@ NSTimer *audioTimer;
         [currentPlayTime setText:@"00:00"];
         [remainingPlayTime setText:@"00:00"];
     }
+}
+
+
+#pragma mark - SIMPLE Algo
+- (void) compute:(NSTimeInterval)time forSong:(MPMediaItem *)prev
+{
+    NSLog(@"reached compute1");
+    float listened = time;
+    float prevTrackLength = [[prev valueForProperty:MPMediaItemPropertyPlaybackDuration] floatValue];
+    float prevPercent = (listened*100)/prevTrackLength;
+    //float currentTrackLength = [[[musicPlayer nowPlayingItem] valueForProperty:MPMediaItemPropertyPlaybackDuration] floatValue];
+    //float percentOfCurrent = (((float)[musicPlayer currentPlaybackTime])*100)/currentTrackLength;
+    int curr = [[idx objectForKey:[[musicPlayer nowPlayingItem] valueForProperty:MPMediaItemPropertyPersistentID]] integerValue];
+    int previous = [[idx objectForKey:[prev valueForProperty:MPMediaItemPropertyPersistentID]] integerValue];
+    if(prevPercent > 50.0 && prevPercent <= 80)
+    {
+        rewardMatrix[curr][previous] += 3;
+        [self compute2:prevPercent forSong:prev];
+        twoBack = prev;
+        tBackPercent = prevPercent;
+        step = YES;
+    } else if(prevPercent > 80) {
+        rewardMatrix[curr][previous] += 5;
+        [self compute2:prevPercent forSong:prev];
+        twoBack = prev;
+        tBackPercent = prevPercent;
+        step = YES;
+    } else {
+        rewardMatrix[curr][previous] += 0;
+        [self compute2:prevPercent forSong:prev];
+        twoBack = prev;
+        tBackPercent = prevPercent;
+        step = YES;
+    }
+}
+
+- (void) compute2:(float)percent forSong:(MPMediaItem *)prev
+{
+    NSLog(@"reached compute2");
+    if(step)
+    {
+        NSLog(@"entered compute2 calculations");
+        if(tBackPercent < 50)
+        {
+            [self updateV:1 forSong:prev withTime:percent];
+        } else if(tBackPercent >= 50 && tBackPercent < 80) {
+            [self updateV:2 forSong:prev withTime:percent];
+        } else {
+            [self updateV:3 forSong:prev withTime:percent];
+        }
+    }
+}
+
+- (void) updateV:(int)which forSong:(MPMediaItem *)prev withTime:(float)percent
+{
+    NSLog(@"reached updateV");
+    int updateIndex = [[idx objectForKey:[twoBack valueForProperty:MPMediaItemPropertyPersistentID]] integerValue];
+    NSArray *keys = [songs allKeys];
+    id aKey = [keys objectAtIndex:updateIndex];
+    int prevIndex = [[idx objectForKey:[prev valueForProperty:MPMediaItemPropertyPersistentID]] integerValue];
+    if(which == 1)
+    {
+        NSMutableArray *temp = [[songs objectForKey:aKey] objectForKey:@"v1"];
+        int t = [[temp objectAtIndex:prevIndex] integerValue];
+        if(percent < 50)
+        {
+            t += 0;
+            [temp replaceObjectAtIndex:prevIndex withObject:[NSNumber numberWithInt:t]];
+            
+        } else if(percent >= 50 && percent < 80)
+        {
+            t += 3;
+            [temp replaceObjectAtIndex:prevIndex withObject:[NSNumber numberWithInt:t]];
+        } else {
+            t += 5;
+            [temp replaceObjectAtIndex:prevIndex withObject:[NSNumber numberWithInt:t]];
+        }
+        [[songs objectForKey:aKey] setValue:temp forKey:@"v1"];
+        NSLog(@"%d", t);
+    } else if(which == 2)
+    {
+        NSMutableArray *temp = [[songs objectForKey:aKey] objectForKey:@"v2"];
+        int t = [[temp objectAtIndex:prevIndex] integerValue];
+        if(percent < 50)
+        {
+            t += 0;
+            [temp replaceObjectAtIndex:prevIndex withObject:[NSNumber numberWithInt:t]];
+        } else if(percent >= 50 && percent < 80)
+        {
+            t += 3;
+            [temp replaceObjectAtIndex:prevIndex withObject:[NSNumber numberWithInt:t]];
+        } else {
+            t += 5;
+            [temp replaceObjectAtIndex:prevIndex withObject:[NSNumber numberWithInt:t]];
+        }
+        [[songs objectForKey:aKey] setValue:temp forKey:@"v2"];
+    } else if(which == 3)
+    {
+        NSMutableArray *temp = [[songs objectForKey:aKey] objectForKey:@"v3"];
+        int t = [[temp objectAtIndex:prevIndex] integerValue];
+        if(percent < 50)
+        {
+            t += 0;
+            [temp replaceObjectAtIndex:prevIndex withObject:[NSNumber numberWithInt:t]];
+        } else if(percent >= 50 && percent < 80)
+        {
+            t += 3;
+            [temp replaceObjectAtIndex:prevIndex withObject:[NSNumber numberWithInt:t]];
+        } else {
+            t += 5;
+            [temp replaceObjectAtIndex:prevIndex withObject:[NSNumber numberWithInt:t]];
+        }
+        [[songs objectForKey:aKey] setValue:temp forKey:@"v3"];
+    }
+    NSString *filePath = [[self getFilePath] stringByAppendingPathComponent:@"data.plist"];
+    [songs writeToFile:filePath atomically:YES];
 }
 
 @end

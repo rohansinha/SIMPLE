@@ -15,7 +15,7 @@
 		1C6BB50D1829A0F000FEA8CE /* ReflectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C6BB50C1829A0F000FEA8CE /* ReflectionView.m */; };
 		1C7244A217B2A71700A60BF1 /* Appicon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C7244A117B2A71700A60BF1 /* Appicon.png */; };
 		1C84CA051802FC7E00823F36 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C84CA031802FC7E00823F36 /* libsqlite3.dylib */; };
-		1CE4918D180315B70008301F /* DefaultLibraryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CE4918C180315B70008301F /* DefaultLibraryViewController.m */; };
+		1CE248F018A54CAC004C98CD /* songs.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1CE248EF18A54CAC004C98CD /* songs.plist */; };
 		1CFC7621174B92AB00ECF5A5 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CFC7620174B92AB00ECF5A5 /* UIKit.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		1CFC7623174B92AB00ECF5A5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CFC7622174B92AB00ECF5A5 /* Foundation.framework */; };
 		1CFC7625174B92AB00ECF5A5 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CFC7624174B92AB00ECF5A5 /* CoreGraphics.framework */; };
@@ -44,8 +44,7 @@
 		1C7244A317B2A7A400A60BF1 /* SIMPLE-iPhone.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "SIMPLE-iPhone.jpg"; sourceTree = "<group>"; };
 		1C84CA021802FC7E00823F36 /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
 		1C84CA031802FC7E00823F36 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
-		1CE4918B180315B70008301F /* DefaultLibraryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DefaultLibraryViewController.h; sourceTree = "<group>"; };
-		1CE4918C180315B70008301F /* DefaultLibraryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DefaultLibraryViewController.m; sourceTree = "<group>"; };
+		1CE248EF18A54CAC004C98CD /* songs.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = songs.plist; sourceTree = "<group>"; };
 		1CFC761D174B92AB00ECF5A5 /* SIMPLE.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SIMPLE.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1CFC7620174B92AB00ECF5A5 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		1CFC7622174B92AB00ECF5A5 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -122,8 +121,6 @@
 				1CFC7638174B92AB00ECF5A5 /* MainStoryboard.storyboard */,
 				1C0E16C6183780560057E345 /* QueueViewController.h */,
 				1C0E16C7183780560057E345 /* QueueViewController.m */,
-				1CE4918B180315B70008301F /* DefaultLibraryViewController.h */,
-				1CE4918C180315B70008301F /* DefaultLibraryViewController.m */,
 				1CFC763E174B92AB00ECF5A5 /* PlayerController.h */,
 				1CFC763F174B92AB00ECF5A5 /* PlayerController.m */,
 				1CFC7627174B92AB00ECF5A5 /* Supporting Files */,
@@ -135,6 +132,7 @@
 		1CFC7627174B92AB00ECF5A5 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				1CE248EF18A54CAC004C98CD /* songs.plist */,
 				1C6BB50118299ED700FEA8CE /* next.png */,
 				1C6BB50218299ED700FEA8CE /* pause.png */,
 				1C6BB50318299ED700FEA8CE /* play.png */,
@@ -181,6 +179,11 @@
 			attributes = {
 				LastUpgradeCheck = 0460;
 				ORGANIZATIONNAME = "Rohan Sinha";
+				TargetAttributes = {
+					1CFC761C174B92AB00ECF5A5 = {
+						DevelopmentTeam = 3Y4QTX4YBY;
+					};
+				};
 			};
 			buildConfigurationList = 1CFC7618174B92AB00ECF5A5 /* Build configuration list for PBXProject "SIMPLE" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -207,6 +210,7 @@
 				1CFC762B174B92AB00ECF5A5 /* InfoPlist.strings in Resources */,
 				1CFC7633174B92AB00ECF5A5 /* Default.png in Resources */,
 				1CFC7635174B92AB00ECF5A5 /* Default@2x.png in Resources */,
+				1CE248F018A54CAC004C98CD /* songs.plist in Resources */,
 				1CFC7637174B92AB00ECF5A5 /* Default-568h@2x.png in Resources */,
 				1C6BB50818299ED700FEA8CE /* prev.png in Resources */,
 				1CFC763A174B92AB00ECF5A5 /* MainStoryboard.storyboard in Resources */,
@@ -225,7 +229,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1CE4918D180315B70008301F /* DefaultLibraryViewController.m in Sources */,
 				1CFC762D174B92AB00ECF5A5 /* main.m in Sources */,
 				1CFC7631174B92AB00ECF5A5 /* AppDelegate.m in Sources */,
 				1CFC7640174B92AB00ECF5A5 /* PlayerController.m in Sources */,
@@ -318,14 +321,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Rohan Sinha (HMUX5K6W8X)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Rohan Sinha (HMUX5K6W8X)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SIMPLE/SIMPLE-Prefix.pch";
 				INFOPLIST_FILE = "SIMPLE/SIMPLE-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "15F036D6-E899-43CA-BA74-64EED1C23E7D";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -335,14 +338,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Rohan Sinha (HMUX5K6W8X)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Rohan Sinha (HMUX5K6W8X)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SIMPLE/SIMPLE-Prefix.pch";
 				INFOPLIST_FILE = "SIMPLE/SIMPLE-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "15F036D6-E899-43CA-BA74-64EED1C23E7D";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
