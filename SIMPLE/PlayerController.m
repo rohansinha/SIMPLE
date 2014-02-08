@@ -292,8 +292,9 @@ NSMutableArray *v3;
 {
     if(![self displayMode])
     {
-        [musicPlayer skipToPreviousItem];
-        audioTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(audioProgressUpdate) userInfo:nil repeats:YES];
+        /*[musicPlayer skipToPreviousItem];
+        audioTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(audioProgressUpdate) userInfo:nil repeats:YES];*/
+        [self prevSong:recognizer];
     }
 }
 
@@ -301,8 +302,9 @@ NSMutableArray *v3;
 {
     if(![self displayMode])
     {
-        [musicPlayer skipToNextItem];
-        audioTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(audioProgressUpdate) userInfo:nil repeats:YES];
+        /*[musicPlayer skipToNextItem];
+        audioTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(audioProgressUpdate) userInfo:nil repeats:YES];*/
+        [self nextSong:recognizer];
     }
 }
 
@@ -531,6 +533,8 @@ NSMutableArray *v3;
     
     NSString *filePath = [[self getFilePath] stringByAppendingPathComponent:@"data.plist"];
     [songs writeToFile:filePath atomically:YES];
+    if(numSongsHeard > 5)
+        [self predict:prev heard:percent];
 }
 
 - (void) predict:(MPMediaItem *)current heard:(float)percentHeard
@@ -547,7 +551,7 @@ NSMutableArray *v3;
     //Notmalizng reward matrix
     for(int i = 0; i < n; i++)
     {
-        sumReward += rewardMatrix[index][i];
+        sumReward += rewardMatrix[i][index];
     }
     if(sumReward > 0)
     {
@@ -616,7 +620,8 @@ NSMutableArray *v3;
             //[temp addObject:<#(id)#>
         }
     }
-    
+    NSString *filePath = [[self getFilePath] stringByAppendingPathComponent:@"data.plist"];
+    [songs writeToFile:filePath atomically:YES];
     //Prediction--Queue Gen
     float q[n];
     float max = 0;
