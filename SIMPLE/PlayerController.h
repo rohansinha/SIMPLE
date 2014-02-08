@@ -42,7 +42,6 @@
 - (IBAction)prevSong:(id)sender;
 - (IBAction)playPause:(id)sender;
 - (IBAction)nextSong:(id)sender;
-- (IBAction)testQueue:(id)sender;
 - (void) registerMediaPlayerNotifications;
 - (void) handle_tap:(NSSet *)touches;
 

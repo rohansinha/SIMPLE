@@ -21,16 +21,16 @@ BOOL step = NO;  //for num songs (3 queue)
 MPMediaItem *twoBack;
 float tBackPercent;
 int numSongsHeard = 0;
-int rewardMatrix[1000][1000];
-int normalizedReward[1000];
+float rewardMatrix[1000][1000];
+float normalizedReward[1000];
 NSMutableDictionary *songs;
 NSMutableDictionary *idx;
 NSMutableArray *v1;
 NSMutableArray *v2;
 NSMutableArray *v3;
-NSMutableArray *r1;
-NSMutableArray *r2;
-NSMutableArray *r3;
+//NSMutableArray *r1;
+//NSMutableArray *r2;
+//NSMutableArray *r3;
 
 #pragma mark - Intial Load
 /*
@@ -104,28 +104,28 @@ NSMutableArray *r3;
         {
             for(int j = 0; j < n; j++)
             {
-                rewardMatrix[i][j] = 0;
+                rewardMatrix[i][j] = 0.00;
             }
         }
         idx = [[NSMutableDictionary alloc] init];
-        r1 = [[NSMutableArray alloc] init];
-        r2 = [[NSMutableArray alloc] init];
-        r3 = [[NSMutableArray alloc] init];
+        //r1 = [[NSMutableArray alloc] init];
+        //r2 = [[NSMutableArray alloc] init];
+        //r3 = [[NSMutableArray alloc] init];
         v1 = [[NSMutableArray alloc] init];
         v2 = [[NSMutableArray alloc] init];
         v3 = [[NSMutableArray alloc] init];
         //Initializing songs
         NSArray *fullList = [query items];
         songs = [[NSMutableDictionary alloc] init];
-        NSNumber *zero = [NSNumber numberWithInt:0];
+        //NSNumber *zero = [NSNumber numberWithInt:0];
         float a = (1/(float)n); //float contributed by nirvik
         //NSLog(@"%f", a);
         NSNumber *calc = [NSNumber numberWithFloat:a];
         for(int i = 0; i < 1000; i++)
         {
-            [r1 addObject:zero];
-            [r2 addObject:zero];
-            [r3 addObject:zero];
+            //[r1 addObject:zero];
+            //[r2 addObject:zero];
+            //[r3 addObject:zero];
             [v1 addObject:calc];
             [v2 addObject:calc];
             [v3 addObject:calc];
@@ -136,9 +136,9 @@ NSMutableArray *r3;
         [sid setObject:v1 forKey:@"v1"];
         [sid setObject:v2 forKey:@"v2"];
         [sid setObject:v3 forKey:@"v3"];
-        [sid setObject:r1 forKey:@"r1"];
-        [sid setObject:r2 forKey:@"r2"];
-        [sid setObject:r3 forKey:@"r3"];
+        //[sid setObject:r1 forKey:@"r1"];
+        //[sid setObject:r2 forKey:@"r2"];
+        //[sid setObject:r3 forKey:@"r3"];
         for(int i = 0; i < n; i++)
         {
             //[sid setObject:[[fullList objectAtIndex:i] valueForProperty:MPMediaItemPropertyTitle]  forKey:@"name"];
@@ -365,8 +365,8 @@ NSMutableArray *r3;
         audioTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(audioProgressUpdate) userInfo:nil repeats:YES];
     }
 }
-
-- (IBAction)testQueue:(id)sender
+/*
+- (void)testQueue:(id)sender
 {
     MPMediaItem *current = [musicPlayer nowPlayingItem];
     NSTimeInterval playTime = [musicPlayer currentPlaybackTime];
@@ -387,7 +387,7 @@ NSMutableArray *r3;
     if(wasPlaying)
         [musicPlayer play];
 }
-
+*/
 - (IBAction)nextSong:(id)sender
 {
     NSTimeInterval time = [musicPlayer currentPlaybackTime];
@@ -428,21 +428,21 @@ NSMutableArray *r3;
     //float percentOfCurrent = (((float)[musicPlayer currentPlaybackTime])*100)/currentTrackLength;
     int curr = [[idx objectForKey:[[musicPlayer nowPlayingItem] valueForProperty:MPMediaItemPropertyPersistentID]] integerValue];
     int previous = [[idx objectForKey:[prev valueForProperty:MPMediaItemPropertyPersistentID]] integerValue];
-    if(prevPercent > 50.0 && prevPercent <= 80)
+    if(prevPercent > 50.0 && prevPercent <= 80.0)
     {
-        rewardMatrix[curr][previous] += 3;
+        rewardMatrix[curr][previous] += 3.00;
         [self compute2:prevPercent forSong:prev];
         twoBack = prev;
         tBackPercent = prevPercent;
         step = YES;
     } else if(prevPercent > 80) {
-        rewardMatrix[curr][previous] += 5;
+        rewardMatrix[curr][previous] += 5.00;
         [self compute2:prevPercent forSong:prev];
         twoBack = prev;
         tBackPercent = prevPercent;
         step = YES;
     } else {
-        rewardMatrix[curr][previous] += 0;
+        rewardMatrix[curr][previous] += 0.00;
         [self compute2:prevPercent forSong:prev];
         twoBack = prev;
         tBackPercent = prevPercent;
@@ -456,10 +456,10 @@ NSMutableArray *r3;
     if(step)
     {
         NSLog(@"entered compute2 calculations");
-        if(tBackPercent < 50)
+        if(tBackPercent < 50.0)
         {
             [self updateV:1 forSong:prev withTime:percent];
-        } else if(tBackPercent >= 50 && tBackPercent < 80) {
+        } else if(tBackPercent >= 50.0 && tBackPercent < 80.0) {
             [self updateV:2 forSong:prev withTime:percent];
         } else {
             [self updateV:3 forSong:prev withTime:percent];
@@ -477,59 +477,169 @@ NSMutableArray *r3;
     if(which == 1)
     {
         NSMutableArray *temp = [[songs objectForKey:aKey] objectForKey:@"v1"];
-        int t = [[temp objectAtIndex:prevIndex] integerValue];
-        if(percent < 50)
+        float t = [[temp objectAtIndex:prevIndex] floatValue];
+        if(percent < 50.0)
         {
-            t += 0;
-            [temp replaceObjectAtIndex:prevIndex withObject:[NSNumber numberWithInt:t]];
+            t += 0.00;
+            [temp replaceObjectAtIndex:prevIndex withObject:[NSNumber numberWithFloat:t]];
             
-        } else if(percent >= 50 && percent < 80)
+        } else if(percent >= 50.0 && percent < 80.0)
         {
-            t += 3;
-            [temp replaceObjectAtIndex:prevIndex withObject:[NSNumber numberWithInt:t]];
+            t += 3.00;
+            [temp replaceObjectAtIndex:prevIndex withObject:[NSNumber numberWithFloat:t]];
         } else {
-            t += 5;
-            [temp replaceObjectAtIndex:prevIndex withObject:[NSNumber numberWithInt:t]];
+            t += 5.00;
+            [temp replaceObjectAtIndex:prevIndex withObject:[NSNumber numberWithFloat:t]];
         }
         [[songs objectForKey:aKey] setValue:temp forKey:@"v1"];
-        NSLog(@"%d", t);
+        NSLog(@"%f", t);
     } else if(which == 2)
     {
         NSMutableArray *temp = [[songs objectForKey:aKey] objectForKey:@"v2"];
-        int t = [[temp objectAtIndex:prevIndex] integerValue];
-        if(percent < 50)
+        float t = [[temp objectAtIndex:prevIndex] floatValue];
+        if(percent < 50.0)
         {
-            t += 0;
-            [temp replaceObjectAtIndex:prevIndex withObject:[NSNumber numberWithInt:t]];
-        } else if(percent >= 50 && percent < 80)
+            t += 0.00;
+            [temp replaceObjectAtIndex:prevIndex withObject:[NSNumber numberWithFloat:t]];
+        } else if(percent >= 50.0 && percent < 80.0)
         {
-            t += 3;
-            [temp replaceObjectAtIndex:prevIndex withObject:[NSNumber numberWithInt:t]];
+            t += 3.00;
+            [temp replaceObjectAtIndex:prevIndex withObject:[NSNumber numberWithFloat:t]];
         } else {
-            t += 5;
-            [temp replaceObjectAtIndex:prevIndex withObject:[NSNumber numberWithInt:t]];
+            t += 5.00;
+            [temp replaceObjectAtIndex:prevIndex withObject:[NSNumber numberWithFloat:t]];
         }
         [[songs objectForKey:aKey] setValue:temp forKey:@"v2"];
     } else if(which == 3)
     {
         NSMutableArray *temp = [[songs objectForKey:aKey] objectForKey:@"v3"];
-        int t = [[temp objectAtIndex:prevIndex] integerValue];
-        if(percent < 50)
+        float t = [[temp objectAtIndex:prevIndex] floatValue];
+        if(percent < 50.0)
         {
-            t += 0;
-            [temp replaceObjectAtIndex:prevIndex withObject:[NSNumber numberWithInt:t]];
-        } else if(percent >= 50 && percent < 80)
+            t += 0.00;
+            [temp replaceObjectAtIndex:prevIndex withObject:[NSNumber numberWithFloat:t]];
+        } else if(percent >= 50.0 && percent < 80.0)
         {
-            t += 3;
-            [temp replaceObjectAtIndex:prevIndex withObject:[NSNumber numberWithInt:t]];
+            t += 3.00;
+            [temp replaceObjectAtIndex:prevIndex withObject:[NSNumber numberWithFloat:t]];
         } else {
-            t += 5;
-            [temp replaceObjectAtIndex:prevIndex withObject:[NSNumber numberWithInt:t]];
+            t += 5.00;
+            [temp replaceObjectAtIndex:prevIndex withObject:[NSNumber numberWithFloat:t]];
         }
         [[songs objectForKey:aKey] setValue:temp forKey:@"v3"];
     }
+    
     NSString *filePath = [[self getFilePath] stringByAppendingPathComponent:@"data.plist"];
     [songs writeToFile:filePath atomically:YES];
+}
+
+- (void) predict:(MPMediaItem *)current heard:(float)percentHeard
+{
+    int index = [[idx objectForKey:[current valueForProperty:MPMediaItemPropertyPersistentID]] integerValue];
+    float sumReward = 0.00;
+    float sumV = 0.00;
+    MPMediaQuery *query = [MPMediaQuery songsQuery]; //filter songs...remove videos and shit
+    int n = [[query items] count];
+    id aKey;
+    float tempV[n];
+    NSArray *keys = [songs allKeys];
+    
+    //Notmalizng reward matrix
+    for(int i = 0; i < n; i++)
+    {
+        sumReward += rewardMatrix[index][i];
+    }
+    if(sumReward > 0)
+    {
+        for(int i = 0; i < n; i++)
+        {
+            normalizedReward[i] = (float)(rewardMatrix[index][i]/sumReward);
+        }
+    }
+    
+    //Normalizing Vi
+    if(percentHeard < 50.0)
+    {
+        //r1
+        for(int i = 0; i < n; i++)
+        {
+            aKey = [keys objectAtIndex:i];
+            //sumV += [[[[songs objectForKey:aKey] objectForKey:@"v1"] objectAtIndex:i] floatValue];
+            //[temp addObject:[NSNumber numberWithFloat:[[[[songs objectForKey:aKey] objectForKey:@"v1"] objectAtIndex:i] floatValue]]];
+            tempV[i] = [[[[songs objectForKey:aKey] objectForKey:@"v1"] objectAtIndex:i] floatValue];
+            sumV += tempV[i];
+        }
+        
+        if(sumV > 0)
+        {
+            for(int i = 0; i < n; i++)
+            {
+                tempV[i] = tempV[i]/sumV;
+            }
+            //[temp addObject:<#(id)#>
+        }
+    } else if(percentHeard >= 50.0 && percentHeard < 80.0)
+    {
+        //r2
+        for(int i = 0; i < n; i++)
+        {
+            aKey = [keys objectAtIndex:i];
+            //[temp addObject:[NSNumber numberWithFloat:[[[[songs objectForKey:aKey] objectForKey:@"v1"] objectAtIndex:i] floatValue]]];
+            tempV[i] = [[[[songs objectForKey:aKey] objectForKey:@"v2"] objectAtIndex:i] floatValue];
+            sumV += tempV[i];
+        }
+        
+        if(sumV > 0)
+        {
+            for(int i = 0; i < n; i++)
+            {
+                tempV[i] = tempV[i]/sumV;
+            }
+            //[temp addObject:<#(id)#>
+        }
+    } else {
+        //r3
+        for(int i = 0; i < n; i++)
+        {
+            aKey = [keys objectAtIndex:i];
+            //[temp addObject:[NSNumber numberWithFloat:[[[[songs objectForKey:aKey] objectForKey:@"v1"] objectAtIndex:i] floatValue]]];
+            tempV[i] = [[[[songs objectForKey:aKey] objectForKey:@"v3"] objectAtIndex:i] floatValue];
+            sumV += tempV[i];
+        }
+        
+        if(sumV > 0)
+        {
+            for(int i = 0; i < n; i++)
+            {
+                tempV[i] = tempV[i]/sumV;
+            }
+            //[temp addObject:<#(id)#>
+        }
+    }
+    
+    //Prediction--Queue Gen
+    float q[n];
+    float max = 0;
+    int maxIndex = 0;
+    for(int i = 0; i < n; i++)
+    {
+        q[i] = (normalizedReward[i]*0.6)+(0.4*tempV[i]);
+        if(q[i] > max)
+        {
+            max = q[i];
+            maxIndex = i;
+        }
+    }
+    NSArray *allKeysForMax = [idx allKeysForObject:[NSNumber numberWithInt:maxIndex]];
+    //[MPMediaItemCollection collectionWithItems:(NSArray *) allKeysForMax];
+    NSString *pID = [allKeysForMax objectAtIndex:0];
+    MPMediaPropertyPredicate *predicate = [MPMediaPropertyPredicate predicateWithValue:pID forProperty:MPMediaItemPropertyPersistentID];
+    MPMediaQuery *songQuery = [[MPMediaQuery alloc] init];
+    [songQuery addFilterPredicate:predicate];
+    NSArray *queue = [songQuery items];
+    [self setNowPlayingQueue:[MPMediaItemCollection collectionWithItems:(NSArray *) queue]];
+    [musicPlayer setQueueWithItemCollection:nowPlayingQueue];
+    [musicPlayer play];
 }
 
 @end
