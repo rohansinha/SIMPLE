@@ -12,5 +12,8 @@
 @interface QueueViewController : UITableViewController
 
 @property (copy, nonatomic) MPMediaItemCollection *playQueue;
+@property (weak, nonatomic) id delegate;
+
+- (IBAction)dismiss:(id)sender;
 
 @end

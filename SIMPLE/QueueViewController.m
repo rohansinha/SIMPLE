@@ -13,7 +13,9 @@
 @end
 
 @implementation QueueViewController
-@synthesize playQueue;
+@synthesize playQueue, delegate;
+
+NSMutableArray *queue;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -35,6 +37,7 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
     //View to just see the current queue...will work as a modal segue
+    queue = [[playQueue items] mutableCopy];
 }
 
 - (void)didReceiveMemoryWarning
@@ -54,7 +57,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return [playQueue count];
+    return [queue count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -67,7 +70,7 @@
                 reuseIdentifier:@"Song"];
     }
     
-    MPMediaItem *item = [[playQueue items] objectAtIndex:indexPath.row];
+    MPMediaItem *item = [queue objectAtIndex:indexPath.row];
     
     [[cell textLabel] setText:[item valueForProperty:MPMediaItemPropertyTitle]];
     [[cell detailTextLabel] setText:[item valueForProperty:MPMediaItemPropertyArtist]];
@@ -76,6 +79,11 @@
 	//cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
     
 	return cell;
+}
+
+- (IBAction)dismiss:(id)sender {
+    //[self dismissModalViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:NO];
 }
 
 /*

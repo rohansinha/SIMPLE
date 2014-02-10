@@ -88,6 +88,27 @@ NSMutableArray *last20PID;
     [self initializeData];
 }
 
+-(void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    /*NSString *rwd = [[self getFilePath] stringByAppendingPathComponent:@"rewards.plist"];
+    NSString *filePath = [[self getFilePath] stringByAppendingPathComponent:@"data.plist"];
+    NSString *mapper = [[self getFilePath] stringByAppendingPathComponent:@"mapper.plist"];
+    NSString *pol1 = [[self getFilePath] stringByAppendingPathComponent:@"policy1.plist"];
+    NSString *pol2 = [[self getFilePath] stringByAppendingPathComponent:@"policy2.plist"]; */
+    
+    if ([segue.identifier isEqualToString:@"ShowQueue"])
+    {
+        QueueViewController *qvc = [segue destinationViewController];
+        if([qvc respondsToSelector:@selector(setDelegate:)])
+        {
+            [qvc setValue:self forKey:@"delegate"];
+        }
+        if ([qvc respondsToSelector:@selector(setPlayQueue:)]) {
+            [qvc setValue:nowPlayingQueue forKey:@"playQueue"];
+        }
+    }
+}
+
 #pragma mark - Database Stuff
 - (NSString *) getFilePath
 {
