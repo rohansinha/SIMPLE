@@ -59,6 +59,7 @@ NSMutableArray *last20PID;
     if([musicPlayer playbackState] == MPMusicPlaybackStateStopped || [musicPlayer playbackState] == MPMusicPlaybackStatePaused)
         [playPauseButton setImage:[UIImage imageNamed:@"play.png"] forState:normal];
     else [playPauseButton setImage:[UIImage imageNamed:@"pause.png"] forState:normal];
+    [artworkView setImage:[UIImage imageNamed:@"SIMPLE_logo.png"]];
     [self.reflectionView updateReflection];
     
     [self registerMediaPlayerNotifications];
@@ -240,7 +241,8 @@ NSMutableArray *last20PID;
     
     //[playPosition setValue:[musicPlayer currentPlaybackTime]];
     [playPosition setProgress:([musicPlayer currentPlaybackTime] / [[currentItem valueForProperty:MPMediaItemPropertyPlaybackDuration] doubleValue])];
-	UIImage *artworkImage = [UIImage imageNamed:@"noArtworkImage.png"];
+	//UIImage *artworkImage = [UIImage imageNamed:@"noArtworkImage.png"];
+    UIImage *artworkImage = [UIImage imageNamed:@"SIMPLE_logo.png"];
 	MPMediaItemArtwork *artwork = [currentItem valueForProperty: MPMediaItemPropertyArtwork];
 	if (artwork) artworkImage = [artwork imageWithSize:CGSizeMake(320, 320)];
 	NSString *genre = [currentItem valueForProperty: MPMediaItemPropertyGenre];

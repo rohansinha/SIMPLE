@@ -30,7 +30,7 @@ NSString *text;
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    [ad setImage:[UIImage imageNamed:@"ad_here.jpg"]];
+    //[ad setImage:[UIImage imageNamed:@"ad_here.jpg"]];
     audioTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(animateLoad) userInfo:nil repeats:YES];
     [progress setProgress:a animated:YES];
 }
